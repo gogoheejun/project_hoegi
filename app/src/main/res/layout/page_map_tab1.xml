@@ -7,4 +7,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+   <RelativeLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true">
+
+       <ImageView
+           android:id="@+id/page_map_iv_weather"
+           android:layout_width="40dp"
+           android:layout_height="40dp"
+           android:src="@drawable/icon_sunny" />
+       <TextView
+           android:id="@+id/page_map_tv_temperature"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="현재 온도: 20도 "
+           android:layout_marginTop="10dp"
+           android:layout_toRightOf="@id/page_map_iv_weather"/>
+
+       <TextView
+           android:id="@+id/page_map_tv_dust"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="미세먼지: 20"
+           android:layout_toRightOf="@id/page_map_tv_temperature"
+           android:layout_alignTop="@id/page_map_tv_temperature"
+           android:layout_marginLeft="10dp"/>
+
+
+   </RelativeLayout>
+
+
+
+
+    <ImageView
+        android:id="@+id/tab1LisPage_filter"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="12dp"
+        android:src="@drawable/icon_filter"
+        android:clickable="true"/>
+
+
 </RelativeLayout>
