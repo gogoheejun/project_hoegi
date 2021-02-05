@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:padding="24dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="카테고리 선택"/>
+
+    <RadioGroup
+        android:id="@+id/tab1_map_dialog_rg1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/tab1_map_dialog_rb_party"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="파티 초대"
+                android:layout_weight="1"
+                android:buttonTint="@color/green1"/>
+            <RadioButton
+                android:id="@+id/tab1_map_dialog_rb_study"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="스터디 모집"
+                android:layout_weight="1"
+                android:buttonTint="@color/green1"/>
+            <RadioButton
+                android:id="@+id/tab1_map_dialog_rb_sports"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="운동 용병모집"
+                android:layout_weight="1"
+                android:buttonTint="@color/green1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/tab1_map_dialog_rb_club"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="동아리 모집"
+                android:layout_weight="1"
+                android:buttonTint="@color/green1"/>
+            <RadioButton
+                android:id="@+id/tab1_map_dialog_rb_meeting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="미팅해요"
+                android:layout_weight="1"
+                android:buttonTint="@color/green1"/>
+            <RadioButton
+                android:id="@+id/tab1_map_dialog_rb_etc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="기타"
+                android:layout_weight="1"
+                android:buttonTint="@color/green1"/>
+        </LinearLayout>
+    </RadioGroup>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="등록 유지시간"/>
+    <RadioGroup
+        android:id="@+id/tab1_map_dialog_rg2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/tab1_map_dialog_rb_time1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="6시간"
+                    android:buttonTint="@color/green1"/>
+                <RadioButton
+                    android:id="@+id/tab1_map_dialog_rb_time2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="24시간"
+                    android:buttonTint="@color/green1"/>
+                <RadioButton
+                    android:id="@+id/tab1_map_dialog_rb_time3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="3일"
+                    android:buttonTint="@color/green1"/>
+                <RadioButton
+                    android:id="@+id/tab1_map_dialog_rb_time4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="7일"
+                    android:buttonTint="@color/green1"/>
+
+        </LinearLayout>
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:hint="제목을 입력해주세요"
+        android:layout_marginTop="8dp"
+        android:inputType="text"
+        android:maxLength="30"
+        android:background="@drawable/loginactivity_et_box"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:hint="제목을 입력해주세요"
+        android:gravity="top"
+        android:layout_marginTop="8dp"
+        android:inputType="textMultiLine"
+        android:maxLines="10"
+        android:background="@drawable/loginactivity_et_box"/>
+
+
+</LinearLayout>

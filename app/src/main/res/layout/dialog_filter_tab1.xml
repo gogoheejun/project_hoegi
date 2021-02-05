@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bg_dialogshape">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="학교"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_kyunghee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="경희대학교"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_uos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="서울시립대학교"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_hufs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="한국외국어대학교"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_allschool"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="전체"
+                android:buttonTint="@color/green2"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+<!--  ======================-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="카테고리"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_category_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="전체"
+                android:buttonTint="@color/green2"
+                android:checked="true"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_category_club"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="동아리 모집"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_category_meeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="미팅해요"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_category_study"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="스터디 모집"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_category_sports"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="운동 모집"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_category_party"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="파티 초대"
+                android:buttonTint="@color/green2"/>
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_category_etc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="기타"
+                android:buttonTint="@color/green2"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_bnv_tab1"
+        android:title="메인"
+        android:icon="@drawable/menu_bnv_main"/>
+    <item android:id="@+id/menu_bnv_tab2"
+        android:title="채팅"
+        android:icon="@drawable/menu_bnv_chat" />
+    <item android:id="@+id/menu_bnv_tab3"
+        android:title="My"
+        android:icon="@drawable/menu_bnv_my"/>
+
+</menu>

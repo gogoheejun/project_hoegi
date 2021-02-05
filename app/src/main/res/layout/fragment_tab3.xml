@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="48dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/tab3Fragment_iv"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/signupactivity_iv_profile1"/>
+        <TextView
+            android:id="@+id/tab3Fragment_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="xxxxx@hufs.ac.kr"
+            android:layout_toRightOf="@id/tab3Fragment_iv"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="4dp"
+            android:textSize="24sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="홍길동"
+            android:textSize="24sp"
+            android:layout_below="@id/tab3Fragment_email"
+            android:layout_alignLeft="@id/tab3Fragment_email" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tab3_gotoProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:text="정보수정"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_transparent_box_selector"
+        android:clickable="true" />
+
+    <TextView
+        android:id="@+id/tab3_gotoFavorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:text="관심목록"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_transparent_box_selector"
+        android:clickable="true"/>
+    <TextView
+        android:id="@+id/tab3_gotoEtc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:text="기타설정"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_transparent_box_selector"
+        android:clickable="true"/>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"/>
+
+</LinearLayout>
