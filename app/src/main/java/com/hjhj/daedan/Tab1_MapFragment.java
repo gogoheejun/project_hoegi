@@ -48,6 +48,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static java.lang.Math.cos;
+import static java.lang.Math.log;
+import static java.lang.Math.pow;
+import static java.lang.Math.tan;
 
 public class Tab1_MapFragment extends Fragment implements
         GoogleMap.OnCameraMoveStartedListener,
@@ -64,6 +68,7 @@ public class Tab1_MapFragment extends Fragment implements
     String weather, temperature;
     String date, time;
     String server;
+    double lat, lon;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +104,6 @@ public class Tab1_MapFragment extends Fragment implements
         mapView.onResume();
         MapsInitializer.initialize(getActivity().getApplicationContext());
         mapView.getMapAsync(this);
-        //todo: 여기에 콜백메소드 연결해주는 뭔가가 있어야함
         return view;
     }
     @Override
@@ -116,8 +120,6 @@ public class Tab1_MapFragment extends Fragment implements
         gMap.setMyLocationEnabled(true);
         //----------지도준비됨
 
-
-        getLocation();//현재위치가져오는 함수
 
 
         LatLng seoul = new LatLng(37.562087, 127.035192);
@@ -147,19 +149,25 @@ public class Tab1_MapFragment extends Fragment implements
 
     @Override
     public void onCameraMove() {
-//        Log.d("MOVE","moving anyway");
+//        Log.d("MOVE","moving anyway");//너무 많이 함수불러짐...좀만 움직여도 몇십번 작동..
     }
 
+    float x,y;//api에 들어갈 좌표임
+    int intX,intY;
     @Override
     public void onCameraMoveStarted(int reason) {
         Log.d("MOVE","move started1");
         getLocation();
+        //todo: 온도가져오기
+        getInfo();
+
+
         if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            Log.d("MOVE","The user gestured on the map.");
+//            Log.d("MOVE","The user gestured on the map.");
         } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION) {
-            Log.d("MOVE","The user tapped something on the map.");
+//            Log.d("MOVE","The user tapped something on the map.");
         } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION) {
-            Log.d("MOVE","The app moved the camera.");
+//            Log.d("MOVE","The app moved the camera.");
         }
     }
 
@@ -167,21 +175,74 @@ public class Tab1_MapFragment extends Fragment implements
         gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
-                Log.e("POSITION", gMap.getCameraPosition().target.toString());
+                lat = gMap.getCameraPosition().target.latitude;
+                lon = gMap.getCameraPosition().target.longitude;
+//                Log.e("POSITION", gMap.getCameraPosition().target.latitude+"");
+                transNum(); //api형식의 좌표로 바꿔서 검색해서 표시
             }
         });
     }
 
+    public void transNum(){
+
+        double Re = 6371.00877; // 지도반경
+        double grid = 5.0; // 격자간격 (km)
+        double slat1 = 30.0; // 표준위도 1
+        double slat2 = 60.0; // 표준위도 2
+        double olon = 126.0; // 기준점 경도
+        double olat = 38.0; // 기준점 위도
+        double xo = 210/grid; // 기준점 X좌표
+        double yo = 675/grid; // 기준점 Y좌표
+        double first = 0;
+        float lon1, lat1; /* Longitude, Latitude [degree] */
+
+        double PI, DEGRAD, RADDEG;
+        double re, sn, sf, ro;
+        double alon, alat, xn, yn, ra, theta;
+        PI = Math.asin(1.0)*2.0;
+        DEGRAD = PI/180.0;
+        RADDEG = 180.0/PI;
+
+        re = Re/grid;
+        slat1 = slat1 * DEGRAD;
+        slat2 = slat2 * DEGRAD;
+        olon = olon * DEGRAD;
+        olat = olat * DEGRAD;
+
+        sn = tan(PI*0.25 + slat2*0.5)/tan(PI*0.25 + slat1*0.5);
+        sn = log(cos(slat1)/cos(slat2))/log(sn);
+        sf = tan(PI*0.25 + slat1*0.5);
+        sf = pow(sf,sn)*cos(slat1)/sn;
+        ro = tan(PI*0.25 + olat*0.5);
+        ro = re*sf/pow(ro,sn);
+        first = 1;
+
+        //---
+        ra = tan(PI*0.25+(lat)*DEGRAD*0.5); //여기서 lat이랑 lon들어가서 바꿔줌
+        ra = re*sf/pow(ra,sn);
+        theta = (lon)*DEGRAD - olon;
+        if (theta > PI) theta -= 2.0*PI;
+        if (theta < -PI) theta += 2.0*PI;
+        theta *= sn;
+		x = (float) ((float)(ra*Math.sin(theta)) + xo);
+		intX = Math.round(x);
+		y = (float) ((float)(ro - ra*cos(theta)) + yo);
+		intY= Math.round(y);
+        Log.d("TRANS",intX+" &"+intY);
+    }
 
 
+
+            //온도랑 날씨데이터 가져와서 화면의 글씨수정하는 함수
     private void getInfo() {
         String api = "ZkmHEAVaoQ0yFwBbRFQSMJkOhXX%2FMQzcTpYDB0Q513dcVb3Vuz6vCU7QSEPdyYs0A3aOUSDG2WuzVo%2BQDF4beQ%3D%3D";
 
         String url1 = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?serviceKey=";
         String url2 = "&numOfRows=100&pageNo=1&dataType=XML&base_date=";
+//        if(x<1) x=55;
+//        if(y<1) y=127;
+        server = url1+api+url2+date+"&base_time="+time+"&nx="+intX+"&ny="+intY;
         //todo: 현재 좌표 가져와서 변환해서 넣어야함
-
-        server = url1+api+url2+date+"&base_time="+time+"&nx="+"55"+"&ny="+"127";
 
         new Thread(){
             @Override
@@ -244,33 +305,49 @@ public class Tab1_MapFragment extends Fragment implements
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tv_temperature.setText(temperature+"도");
+                            try{
+                                if(temperature==null ) temperature = "-";
+                                tv_temperature.setText(temperature+"도");
+                            }catch (Exception e){temperature = "-";
+                                tv_temperature.setText(temperature+"도");
+                            }
+
+//                            Log.d("TEMP",temperature);
                             //- 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
-                            switch (weather){
-                                case "0":
-                                    Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
-                                    break;
-                                case "1":
-                                    Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
-                                    break;
-                                case "2":
-                                    Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
-                                    break;
-                                case "3":
-                                    Glide.with(getActivity()).load(R.drawable.icon_snowy).into(iv_weather);
-                                    break;
-                                case "4":
-                                    Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
-                                    break;
-                                case "5":
-                                    Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
-                                    break;
-                                case "6":
-                                    Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
-                                    break;
-                                case "7":
-                                    Glide.with(getActivity()).load(R.drawable.icon_snowy).into(iv_weather);
-                                    break;
+                            try{
+                                switch (weather){
+                                    case "0":
+                                        Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
+                                        break;
+                                    case "1":
+                                        Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
+                                        break;
+                                    case "2":
+                                        Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
+                                        break;
+                                    case "3":
+                                        Glide.with(getActivity()).load(R.drawable.icon_snowy).into(iv_weather);
+                                        break;
+                                    case "4":
+                                        Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
+                                        break;
+                                    case "5":
+                                        Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
+                                        break;
+                                    case "6":
+                                        Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
+                                        break;
+                                    case "7":
+                                        Glide.with(getActivity()).load(R.drawable.icon_snowy).into(iv_weather);
+                                        break;
+                                    default:
+                                        Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
+                                        break;
+
+                                }
+                            }catch (Exception e){
+                                Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
+                                Log.e("ERROR","에러쓰");
                             }
                         }
                     });
