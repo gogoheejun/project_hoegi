@@ -15,9 +15,10 @@
 
        <ImageView
            android:id="@+id/page_map_iv_weather"
-           android:layout_width="40dp"
-           android:layout_height="40dp"
-           android:src="@drawable/icon_sunny" />
+           android:layout_width="32dp"
+           android:layout_height="32dp"
+           android:layout_marginTop="4dp"
+           android:src="@drawable/icon_earth" />
        <TextView
            android:id="@+id/page_map_tv_temperature"
            android:layout_width="wrap_content"

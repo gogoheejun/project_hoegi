@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -97,9 +98,15 @@ public class Tab1_MapFragment extends Fragment {
                 settings.setZoomControlsEnabled(true);
                 settings.setMyLocationButtonEnabled(true);
                 gMap.setMyLocationEnabled(true);
-                Toast.makeText(getActivity(), "maploaded", Toast.LENGTH_SHORT).show();
+            //----------지도준비됨
 
-
+                //현재위치가져오는 함수
+                gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+                        Log.e("POSITION", gMap.getCameraPosition().target.toString());
+                    }
+                });
 
                 LatLng seoul = new LatLng(37.562087, 127.035192);
 //                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15));//줌 1~25
@@ -110,17 +117,38 @@ public class Tab1_MapFragment extends Fragment {
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+
+            }
+
+            public void onCameraMoveStarted(int reason) {
+
+                if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                    Toast.makeText(getActivity(), "The user gestured on the map.", Toast.LENGTH_SHORT).show();
+                } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION) {
+                    Toast.makeText(getActivity(), "The user tapped something on the map.", Toast.LENGTH_SHORT).show();
+                } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION) {
+                    Toast.makeText(getActivity(), "The app moved the camera.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+            public void onCameraMove() {
+                Toast.makeText(getActivity(), "The camera is moving.", Toast.LENGTH_SHORT).show();
             }
         });
 
+
         return view;
     }
+
 
     private void getInfo() {
         String api = "ZkmHEAVaoQ0yFwBbRFQSMJkOhXX%2FMQzcTpYDB0Q513dcVb3Vuz6vCU7QSEPdyYs0A3aOUSDG2WuzVo%2BQDF4beQ%3D%3D";
 
         String url1 = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?serviceKey=";
         String url2 = "&numOfRows=100&pageNo=1&dataType=XML&base_date=";
+        //todo: 현재 좌표 가져와서 변환해서 넣어야함
+
         server = url1+api+url2+date+"&base_time="+time+"&nx="+"55"+"&ny="+"127";
 
         new Thread(){
@@ -188,7 +216,7 @@ public class Tab1_MapFragment extends Fragment {
                             //- 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
                             switch (weather){
                                 case "0":
-                                    Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
+                                    Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
                                     break;
                                 case "1":
                                     Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
