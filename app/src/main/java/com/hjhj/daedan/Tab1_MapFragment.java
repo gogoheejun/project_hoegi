@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -50,8 +52,9 @@ public class Tab1_MapFragment extends Fragment {
     MapView mapView;
     MarkerOptions myMarker = null;
     TextView tv_temperature;
+    ImageView iv_weather;
     String weather, temperature;
-    String date, time, currentTime, currentTime1, currentTime2;
+    String date, time;
     String server;
 
     @Override
@@ -72,6 +75,7 @@ public class Tab1_MapFragment extends Fragment {
         View view = inflater.inflate(R.layout.page_map_tab1, container, false);
 
         tv_temperature = view.findViewById(R.id.page_map_tv_temperature);
+        iv_weather = view.findViewById(R.id.page_map_iv_weather);
 
         getTime();
         getInfo();
@@ -93,7 +97,7 @@ public class Tab1_MapFragment extends Fragment {
                 settings.setZoomControlsEnabled(true);
                 settings.setMyLocationButtonEnabled(true);
                 gMap.setMyLocationEnabled(true);
-                Toast.makeText(getActivity(), "hihi", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "maploaded", Toast.LENGTH_SHORT).show();
 
 
 
@@ -158,7 +162,6 @@ public class Tab1_MapFragment extends Fragment {
                                         }
                                         temperature = xpp.getText();
                                     }
-                                    //- 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
                                     if(xpp.getText().equals("PTY")){
                                         for(int i=0;i<9;i++){
                                             xpp.next();
@@ -181,7 +184,34 @@ public class Tab1_MapFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tv_temperature.setText(temperature+"&"+weather);
+                            tv_temperature.setText(temperature+"도");
+                            //- 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+                            switch (weather){
+                                case "0":
+                                    Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
+                                    break;
+                                case "1":
+                                    Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
+                                    break;
+                                case "2":
+                                    Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
+                                    break;
+                                case "3":
+                                    Glide.with(getActivity()).load(R.drawable.icon_snowy).into(iv_weather);
+                                    break;
+                                case "4":
+                                    Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
+                                    break;
+                                case "5":
+                                    Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
+                                    break;
+                                case "6":
+                                    Glide.with(getActivity()).load(R.drawable.icon_rainsnow).into(iv_weather);
+                                    break;
+                                case "7":
+                                    Glide.with(getActivity()).load(R.drawable.icon_snowy).into(iv_weather);
+                                    break;
+                            }
                         }
                     });
 
