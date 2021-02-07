@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -87,12 +88,18 @@ public class Tab1_MapFragment extends Fragment implements
         getTime();
         getInfo();
 
+//        SupportMapFragment mapFragment = (SupportMapFragment)getFragmentManager().findFragmentById(R.id.mappage_mapview);
+//        mapFragment.onCreate(savedInstanceState);
+//        mapFragment.onResume();
+//        MapsInitializer.initialize(getActivity().getApplicationContext());
+//        mapFragment.getMapAsync(this);
 
         mapView = (MapView) view.findViewById(R.id.mappage_mapview);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         MapsInitializer.initialize(getActivity().getApplicationContext());
         mapView.getMapAsync(this);
+        //todo: 여기에 콜백메소드 연결해주는 뭔가가 있어야함
         return view;
     }
     @Override
@@ -109,13 +116,9 @@ public class Tab1_MapFragment extends Fragment implements
         gMap.setMyLocationEnabled(true);
         //----------지도준비됨
 
-        //현재위치가져오는 함수
-        gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                Log.e("POSITION", gMap.getCameraPosition().target.toString());
-            }
-        });
+
+        getLocation();//현재위치가져오는 함수
+
 
         LatLng seoul = new LatLng(37.562087, 127.035192);
 //                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15));//줌 1~25
@@ -124,8 +127,11 @@ public class Tab1_MapFragment extends Fragment implements
 //                CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
 //                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        //아래 두줄이 신의 한수.ㅠㅠㅠ감격
+        gMap.setOnCameraMoveListener(this);
+        gMap.setOnCameraMoveStartedListener(this);
     }
 
 
@@ -141,21 +147,29 @@ public class Tab1_MapFragment extends Fragment implements
 
     @Override
     public void onCameraMove() {
-        Toast.makeText(getActivity(), "The camera is moving.", Toast.LENGTH_SHORT).show();
+//        Log.d("MOVE","moving anyway");
     }
 
     @Override
     public void onCameraMoveStarted(int reason) {
         Log.d("MOVE","move started1");
+        getLocation();
         if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            Toast.makeText(getActivity(), "The user gestured on the map.", Toast.LENGTH_SHORT).show();
-        } else if (reason == GoogleMap.OnCameraMoveStartedListener
-                .REASON_API_ANIMATION) {
-            Toast.makeText(getActivity(), "The user tapped something on the map.", Toast.LENGTH_SHORT).show();
-        } else if (reason == GoogleMap.OnCameraMoveStartedListener
-                .REASON_DEVELOPER_ANIMATION) {
-            Toast.makeText(getActivity(), "The app moved the camera.", Toast.LENGTH_SHORT).show();
+            Log.d("MOVE","The user gestured on the map.");
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION) {
+            Log.d("MOVE","The user tapped something on the map.");
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION) {
+            Log.d("MOVE","The app moved the camera.");
         }
+    }
+
+    public void getLocation(){
+        gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                Log.e("POSITION", gMap.getCameraPosition().target.toString());
+            }
+        });
     }
 
 
