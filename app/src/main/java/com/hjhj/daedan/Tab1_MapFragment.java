@@ -48,7 +48,13 @@ import java.util.TimeZone;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
-public class Tab1_MapFragment extends Fragment {
+public class Tab1_MapFragment extends Fragment implements
+        GoogleMap.OnCameraMoveStartedListener,
+        GoogleMap.OnCameraMoveListener,
+        GoogleMap.OnCameraMoveCanceledListener,
+        GoogleMap.OnCameraIdleListener,
+        OnMapReadyCallback
+        {
     GoogleMap gMap;
     MapView mapView;
     MarkerOptions myMarker = null;
@@ -86,60 +92,72 @@ public class Tab1_MapFragment extends Fragment {
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         MapsInitializer.initialize(getActivity().getApplicationContext());
-        mapView.getMapAsync(new OnMapReadyCallback() {
+        mapView.getMapAsync(this);
+        return view;
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d("MOVE","map ready");
+        gMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        UiSettings settings = gMap.getUiSettings();
+        settings.setZoomControlsEnabled(true);
+        settings.setMyLocationButtonEnabled(true);
+        gMap.setMyLocationEnabled(true);
+        //----------지도준비됨
+
+        //현재위치가져오는 함수
+        gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
-                gMap = googleMap;
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                UiSettings settings = gMap.getUiSettings();
-                settings.setZoomControlsEnabled(true);
-                settings.setMyLocationButtonEnabled(true);
-                gMap.setMyLocationEnabled(true);
-            //----------지도준비됨
+            public void onMapLoaded() {
+                Log.e("POSITION", gMap.getCameraPosition().target.toString());
+            }
+        });
 
-                //현재위치가져오는 함수
-                gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        Log.e("POSITION", gMap.getCameraPosition().target.toString());
-                    }
-                });
-
-                LatLng seoul = new LatLng(37.562087, 127.035192);
+        LatLng seoul = new LatLng(37.562087, 127.035192);
 //                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15));//줌 1~25
 //                gMap.addMarker(new MarkerOptions().position(seoul).title("Title").snippet("Marker Description"));
 
 //                CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
 //                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-
-            }
-
-            public void onCameraMoveStarted(int reason) {
-
-                if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                    Toast.makeText(getActivity(), "The user gestured on the map.", Toast.LENGTH_SHORT).show();
-                } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION) {
-                    Toast.makeText(getActivity(), "The user tapped something on the map.", Toast.LENGTH_SHORT).show();
-                } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION) {
-                    Toast.makeText(getActivity(), "The app moved the camera.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-            public void onCameraMove() {
-                Toast.makeText(getActivity(), "The camera is moving.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        return view;
     }
+
+
+    @Override
+    public void onCameraIdle() {
+
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+
+    }
+
+    @Override
+    public void onCameraMove() {
+        Toast.makeText(getActivity(), "The camera is moving.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        Log.d("MOVE","move started1");
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            Toast.makeText(getActivity(), "The user gestured on the map.", Toast.LENGTH_SHORT).show();
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_API_ANIMATION) {
+            Toast.makeText(getActivity(), "The user tapped something on the map.", Toast.LENGTH_SHORT).show();
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_DEVELOPER_ANIMATION) {
+            Toast.makeText(getActivity(), "The app moved the camera.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
     private void getInfo() {
