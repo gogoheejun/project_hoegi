@@ -17,7 +17,7 @@
         />
 
     <ImageView
-        android:id="@+id/tab1LisPage_filter"
+        android:id="@+id/tab1MapPage_filter"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"

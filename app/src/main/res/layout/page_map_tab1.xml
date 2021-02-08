@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mappage_mapview"
@@ -39,18 +41,42 @@
 
    </RelativeLayout>
 
-
-
-
-    <ImageView
-        android:id="@+id/tab1LisPage_filter"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_alignParentRight="true"
-        android:layout_margin="12dp"
-        android:src="@drawable/icon_filter"
-        android:clickable="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_margin="4dp"
+        android:gravity="center">
 
+        <ImageView
+            android:id="@+id/tab1MapPage_filter"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_filter"
+            android:layout_marginBottom="4dp"
+            android:clickable="true"/>
+
+        <ImageView
+            android:id="@+id/tab1MapPage_write"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_write"
+            android:layout_marginBottom="4dp"
+            android:clickable="true"/>
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/tab1MapPage_fab"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:fabSize="mini"-->
+<!--            android:src="@drawable/icon_write"-->
+<!--            app:backgroundTint="@android:color/transparent"-->
+<!--            app:elevation="1dp"-->
+<!--            style="@style/Widget.App.FloatingActionButton"-->
+<!--            />-->
+
+    </LinearLayout>
 
 </RelativeLayout>

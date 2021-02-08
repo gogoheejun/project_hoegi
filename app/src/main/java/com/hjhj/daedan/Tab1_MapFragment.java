@@ -1,12 +1,16 @@
 package com.hjhj.daedan;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,9 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,7 +30,6 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,6 +51,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static androidx.core.content.ContextCompat.getSystemService;
 import static java.lang.Math.cos;
 import static java.lang.Math.log;
 import static java.lang.Math.pow;
@@ -59,7 +63,7 @@ public class Tab1_MapFragment extends Fragment implements
         GoogleMap.OnCameraMoveCanceledListener,
         GoogleMap.OnCameraIdleListener,
         OnMapReadyCallback
-        {
+       {
     GoogleMap gMap;
     MapView mapView;
     MarkerOptions myMarker = null;
@@ -70,11 +74,15 @@ public class Tab1_MapFragment extends Fragment implements
     String server;
     double lat, lon;
 
+    ImageView iv_filter, iv_write;
+
+    LocationManager locationManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.M){
-            if(checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
                 String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 requestPermissions(permissions, 0);
             }
@@ -84,6 +92,8 @@ public class Tab1_MapFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        locationManager =(LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
 
         View view = inflater.inflate(R.layout.page_map_tab1, container, false);
 
@@ -91,21 +101,76 @@ public class Tab1_MapFragment extends Fragment implements
         iv_weather = view.findViewById(R.id.page_map_iv_weather);
 
         getTime();
-        getInfo();
-
-//        SupportMapFragment mapFragment = (SupportMapFragment)getFragmentManager().findFragmentById(R.id.mappage_mapview);
-//        mapFragment.onCreate(savedInstanceState);
-//        mapFragment.onResume();
-//        MapsInitializer.initialize(getActivity().getApplicationContext());
-//        mapFragment.getMapAsync(this);
+        getInfoAndShow();
 
         mapView = (MapView) view.findViewById(R.id.mappage_mapview);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         MapsInitializer.initialize(getActivity().getApplicationContext());
         mapView.getMapAsync(this);
+
+        //--------------위에까진 지도부르는 기능
+        iv_write = view.findViewById(R.id.tab1MapPage_write);
+        iv_filter = view.findViewById(R.id.tab1MapPage_filter);
+        View myLocationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));//현재위치버튼(오른쪽위버튼) 객체가져오기
+
+
+        //내 위치 실시간 받기
+
+
+        iv_write.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //현재 위치 위도경도 보내기. 그래야 작성해서 db에 저장할때 내용이랑 위치도 저장하니까
+                myLocationButton.performClick();
+                //todo:여기해야해. 지도이동시간 걸려서 현재위치 잘못가져옴;;
+//                locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                //내 위치 실시간 받기
+                if(locationManager.isProviderEnabled("gps")){
+                    locationManager.requestLocationUpdates("gps",5000, 2,locationListener);//시간이 5초 지나거나 2미터가 지나면 갱신하겠다
+                }else if(locationManager.isProviderEnabled("network")){
+                    locationManager.requestLocationUpdates("network",5000,2,locationListener);
+                }
+
+
+                //------------
+                Intent intent = new Intent(getActivity(), Tab1_Map_WriteActivity.class);
+                Bundle extra = new Bundle();
+                intent.putExtra("lat", bluedotLat); //카메라 움직이면 알아서 저 아래 getLocation함수 실행되서 lat lon 구해짐
+                intent.putExtra("lon", bluedotLon);
+                startActivity(intent, extra);
+
+            }
+        });
+
         return view;
     }
+
+    double bluedotLat, bluedotLon;
+    LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            Toast.makeText(getActivity(), "location chagned", Toast.LENGTH_SHORT).show();
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            if (locationManager.isProviderEnabled("gps")) {
+                location = locationManager.getLastKnownLocation("gps");
+            }else if(locationManager.isProviderEnabled("network")){
+                location = locationManager.getLastKnownLocation("network");
+            }
+            bluedotLat = location.getLatitude();
+            bluedotLon = location.getLongitude();
+            Log.d("gotit",bluedotLat+" "+bluedotLon);
+
+        }
+    };
+
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d("MOVE","map ready");
@@ -115,9 +180,9 @@ public class Tab1_MapFragment extends Fragment implements
             return;
         }
         UiSettings settings = gMap.getUiSettings();
-        settings.setZoomControlsEnabled(true);
         settings.setMyLocationButtonEnabled(true);
         gMap.setMyLocationEnabled(true);
+
         //----------지도준비됨
 
 
@@ -152,14 +217,13 @@ public class Tab1_MapFragment extends Fragment implements
 //        Log.d("MOVE","moving anyway");//너무 많이 함수불러짐...좀만 움직여도 몇십번 작동..
     }
 
-    float x,y;//api에 들어갈 좌표임
-    int intX,intY;
+    float x,y;//변환된 좌표
+    int intX,intY; //변환된 좌표를 반올림한 정수형 좌표
     @Override
     public void onCameraMoveStarted(int reason) {
         Log.d("MOVE","move started1");
         getLocation();
-        //todo: 온도가져오기
-        getInfo();
+        getInfoAndShow();
 
 
         if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
@@ -171,6 +235,7 @@ public class Tab1_MapFragment extends Fragment implements
         }
     }
 
+    //onCameraMoveStarted안에 들어갈 현재위치 설정해주는 함수
     public void getLocation(){
         gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
@@ -183,6 +248,7 @@ public class Tab1_MapFragment extends Fragment implements
         });
     }
 
+    //좌표단위변환함수
     public void transNum(){
 
         double Re = 6371.00877; // 지도반경
@@ -233,8 +299,8 @@ public class Tab1_MapFragment extends Fragment implements
 
 
 
-            //온도랑 날씨데이터 가져와서 화면의 글씨수정하는 함수
-    private void getInfo() {
+    //온도랑 날씨데이터 가져와서 화면의 글씨수정하는 함수
+    private void getInfoAndShow() {
         String api = "ZkmHEAVaoQ0yFwBbRFQSMJkOhXX%2FMQzcTpYDB0Q513dcVb3Vuz6vCU7QSEPdyYs0A3aOUSDG2WuzVo%2BQDF4beQ%3D%3D";
 
         String url1 = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?serviceKey=";
@@ -269,7 +335,7 @@ public class Tab1_MapFragment extends Fragment implements
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getActivity(), "start!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "parse start!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 break;
@@ -364,6 +430,7 @@ public class Tab1_MapFragment extends Fragment implements
 
     }
 
+    //api주소안에 넣을 시간가져오는 함수
     private void getTime() {
         TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREAN);
@@ -432,4 +499,15 @@ public class Tab1_MapFragment extends Fragment implements
         }
     }
 
-}
+           @Override
+           public void onStop() {
+               super.onStop();
+               try {
+                   Thread.sleep(5000);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               locationManager.removeUpdates(locationListener);
+
+           }
+       }
