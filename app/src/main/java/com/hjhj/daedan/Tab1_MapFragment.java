@@ -62,8 +62,7 @@ public class Tab1_MapFragment extends Fragment implements
         GoogleMap.OnCameraMoveListener,
         GoogleMap.OnCameraMoveCanceledListener,
         GoogleMap.OnCameraIdleListener,
-        OnMapReadyCallback
-       {
+        OnMapReadyCallback {
     GoogleMap gMap;
     MapView mapView;
     MarkerOptions myMarker = null;
@@ -75,6 +74,7 @@ public class Tab1_MapFragment extends Fragment implements
     double lat, lon;
 
     ImageView iv_filter, iv_write;
+    double bluedotLat, bluedotLon;
 
     LocationManager locationManager;
 
@@ -92,7 +92,7 @@ public class Tab1_MapFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        locationManager =(LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
 
         View view = inflater.inflate(R.layout.page_map_tab1, container, false);
@@ -115,9 +115,6 @@ public class Tab1_MapFragment extends Fragment implements
         View myLocationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));//현재위치버튼(오른쪽위버튼) 객체가져오기
 
 
-        //내 위치 실시간 받기
-
-
         iv_write.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,15 +122,15 @@ public class Tab1_MapFragment extends Fragment implements
                 myLocationButton.performClick();
                 //todo:여기해야해. 지도이동시간 걸려서 현재위치 잘못가져옴;;
 //                locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                //내 위치 실시간 받기
-                if(locationManager.isProviderEnabled("gps")){
-                    locationManager.requestLocationUpdates("gps",5000, 2,locationListener);//시간이 5초 지나거나 2미터가 지나면 갱신하겠다
-                }else if(locationManager.isProviderEnabled("network")){
-                    locationManager.requestLocationUpdates("network",5000,2,locationListener);
-                }
+//                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
+//                //내 위치 실시간 받기
+//                if(locationManager.isProviderEnabled("gps")){
+//                    locationManager.requestLocationUpdates("gps",5000, 2,locationListener);//시간이 5초 지나거나 2미터가 지나면 갱신하겠다
+//                }else if(locationManager.isProviderEnabled("network")){
+//                    locationManager.requestLocationUpdates("network",5000,2,locationListener);
+//                }
 
 
                 //------------
@@ -149,31 +146,42 @@ public class Tab1_MapFragment extends Fragment implements
         return view;
     }
 
-    double bluedotLat, bluedotLon;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        //내 위치 실시간 받기
+        if (locationManager.isProviderEnabled("gps")) {
+            locationManager.requestLocationUpdates("gps", 5000, 2, locationListener);//시간이 5초 지나거나 2미터가 지나면 갱신하겠다
+        } else if (locationManager.isProviderEnabled("network")) {
+            locationManager.requestLocationUpdates("network", 5000, 2, locationListener);
+        }
+    }
+
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
-            Toast.makeText(getActivity(), "location chagned", Toast.LENGTH_SHORT).show();
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             if (locationManager.isProviderEnabled("gps")) {
                 location = locationManager.getLastKnownLocation("gps");
-            }else if(locationManager.isProviderEnabled("network")){
+            } else if (locationManager.isProviderEnabled("network")) {
                 location = locationManager.getLastKnownLocation("network");
             }
             bluedotLat = location.getLatitude();
             bluedotLon = location.getLongitude();
-            Log.d("gotit",bluedotLat+" "+bluedotLon);
+            Log.d("gotit", "locationlistenr:" + bluedotLat + " " + bluedotLon);
 
         }
     };
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("MOVE","map ready");
+        Log.d("MOVE", "map ready");
         gMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -184,7 +192,6 @@ public class Tab1_MapFragment extends Fragment implements
         gMap.setMyLocationEnabled(true);
 
         //----------지도준비됨
-
 
 
         LatLng seoul = new LatLng(37.562087, 127.035192);
@@ -217,11 +224,12 @@ public class Tab1_MapFragment extends Fragment implements
 //        Log.d("MOVE","moving anyway");//너무 많이 함수불러짐...좀만 움직여도 몇십번 작동..
     }
 
-    float x,y;//변환된 좌표
-    int intX,intY; //변환된 좌표를 반올림한 정수형 좌표
+    float x, y;//변환된 좌표
+    int intX, intY; //변환된 좌표를 반올림한 정수형 좌표
+
     @Override
     public void onCameraMoveStarted(int reason) {
-        Log.d("MOVE","move started1");
+        Log.d("MOVE", "move started1");
         getLocation();
         getInfoAndShow();
 
@@ -236,7 +244,7 @@ public class Tab1_MapFragment extends Fragment implements
     }
 
     //onCameraMoveStarted안에 들어갈 현재위치 설정해주는 함수
-    public void getLocation(){
+    public void getLocation() {
         gMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
@@ -249,7 +257,7 @@ public class Tab1_MapFragment extends Fragment implements
     }
 
     //좌표단위변환함수
-    public void transNum(){
+    public void transNum() {
 
         double Re = 6371.00877; // 지도반경
         double grid = 5.0; // 격자간격 (km)
@@ -257,46 +265,45 @@ public class Tab1_MapFragment extends Fragment implements
         double slat2 = 60.0; // 표준위도 2
         double olon = 126.0; // 기준점 경도
         double olat = 38.0; // 기준점 위도
-        double xo = 210/grid; // 기준점 X좌표
-        double yo = 675/grid; // 기준점 Y좌표
+        double xo = 210 / grid; // 기준점 X좌표
+        double yo = 675 / grid; // 기준점 Y좌표
         double first = 0;
         float lon1, lat1; /* Longitude, Latitude [degree] */
 
         double PI, DEGRAD, RADDEG;
         double re, sn, sf, ro;
         double alon, alat, xn, yn, ra, theta;
-        PI = Math.asin(1.0)*2.0;
-        DEGRAD = PI/180.0;
-        RADDEG = 180.0/PI;
+        PI = Math.asin(1.0) * 2.0;
+        DEGRAD = PI / 180.0;
+        RADDEG = 180.0 / PI;
 
-        re = Re/grid;
+        re = Re / grid;
         slat1 = slat1 * DEGRAD;
         slat2 = slat2 * DEGRAD;
         olon = olon * DEGRAD;
         olat = olat * DEGRAD;
 
-        sn = tan(PI*0.25 + slat2*0.5)/tan(PI*0.25 + slat1*0.5);
-        sn = log(cos(slat1)/cos(slat2))/log(sn);
-        sf = tan(PI*0.25 + slat1*0.5);
-        sf = pow(sf,sn)*cos(slat1)/sn;
-        ro = tan(PI*0.25 + olat*0.5);
-        ro = re*sf/pow(ro,sn);
+        sn = tan(PI * 0.25 + slat2 * 0.5) / tan(PI * 0.25 + slat1 * 0.5);
+        sn = log(cos(slat1) / cos(slat2)) / log(sn);
+        sf = tan(PI * 0.25 + slat1 * 0.5);
+        sf = pow(sf, sn) * cos(slat1) / sn;
+        ro = tan(PI * 0.25 + olat * 0.5);
+        ro = re * sf / pow(ro, sn);
         first = 1;
 
         //---
-        ra = tan(PI*0.25+(lat)*DEGRAD*0.5); //여기서 lat이랑 lon들어가서 바꿔줌
-        ra = re*sf/pow(ra,sn);
-        theta = (lon)*DEGRAD - olon;
-        if (theta > PI) theta -= 2.0*PI;
-        if (theta < -PI) theta += 2.0*PI;
+        ra = tan(PI * 0.25 + (lat) * DEGRAD * 0.5); //여기서 lat이랑 lon들어가서 바꿔줌
+        ra = re * sf / pow(ra, sn);
+        theta = (lon) * DEGRAD - olon;
+        if (theta > PI) theta -= 2.0 * PI;
+        if (theta < -PI) theta += 2.0 * PI;
         theta *= sn;
-		x = (float) ((float)(ra*Math.sin(theta)) + xo);
-		intX = Math.round(x);
-		y = (float) ((float)(ro - ra*cos(theta)) + yo);
-		intY= Math.round(y);
-        Log.d("TRANS",intX+" &"+intY);
+        x = (float) ((float) (ra * Math.sin(theta)) + xo);
+        intX = Math.round(x);
+        y = (float) ((float) (ro - ra * cos(theta)) + yo);
+        intY = Math.round(y);
+        Log.d("TRANS", intX + " &" + intY);
     }
-
 
 
     //온도랑 날씨데이터 가져와서 화면의 글씨수정하는 함수
@@ -307,50 +314,50 @@ public class Tab1_MapFragment extends Fragment implements
         String url2 = "&numOfRows=100&pageNo=1&dataType=XML&base_date=";
 //        if(x<1) x=55;
 //        if(y<1) y=127;
-        server = url1+api+url2+date+"&base_time="+time+"&nx="+intX+"&ny="+intY;
+        server = url1 + api + url2 + date + "&base_time=" + time + "&nx=" + intX + "&ny=" + intY;
         //todo: 현재 좌표 가져와서 변환해서 넣어야함
 
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
 
                 try {
-                    Log.e("Test","work0");
+                    Log.e("Test", "work0");
                     URL url = new URL(server);
-                    Log.e("Test","work1");
+                    Log.e("Test", "work1");
                     InputStream is = url.openStream();
-                    Log.e("Test","work2");
+                    Log.e("Test", "work2");
                     InputStreamReader isr = new InputStreamReader(is);
-                    Log.e("Test","work3");
+                    Log.e("Test", "work3");
                     XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                     XmlPullParser xpp = factory.newPullParser();
                     xpp.setInput(isr);
 
                     int eventType = xpp.getEventType();
 
-                    while(eventType!= XmlPullParser.END_DOCUMENT){
-                        switch (eventType){
-                            case  XmlPullParser.START_DOCUMENT:
+                    while (eventType != XmlPullParser.END_DOCUMENT) {
+                        switch (eventType) {
+                            case XmlPullParser.START_DOCUMENT:
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getActivity(), "parse start!", Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(getActivity(), "parse start!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 break;
                             case XmlPullParser.START_TAG:
                                 String tagName = xpp.getName();
-                                if(tagName.equals("category")){
+                                if (tagName.equals("category")) {
                                     xpp.next();
-                                    if(xpp.getText().equals("T1H")){
-                                        for(int i=0;i<9;i++){
+                                    if (xpp.getText().equals("T1H")) {
+                                        for (int i = 0; i < 9; i++) {
                                             xpp.next();
                                         }
                                         temperature = xpp.getText();
                                     }
-                                    if(xpp.getText().equals("PTY")){
-                                        for(int i=0;i<9;i++){
+                                    if (xpp.getText().equals("PTY")) {
+                                        for (int i = 0; i < 9; i++) {
                                             xpp.next();
                                         }
                                         weather = xpp.getText();
@@ -371,17 +378,18 @@ public class Tab1_MapFragment extends Fragment implements
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            try{
-                                if(temperature==null ) temperature = "-";
-                                tv_temperature.setText(temperature+"도");
-                            }catch (Exception e){temperature = "-";
-                                tv_temperature.setText(temperature+"도");
+                            try {
+                                if (temperature == null) temperature = "-";
+                                tv_temperature.setText(temperature + "도");
+                            } catch (Exception e) {
+                                temperature = "-";
+                                tv_temperature.setText(temperature + "도");
                             }
 
 //                            Log.d("TEMP",temperature);
                             //- 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
-                            try{
-                                switch (weather){
+                            try {
+                                switch (weather) {
                                     case "0":
                                         Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
                                         break;
@@ -411,9 +419,9 @@ public class Tab1_MapFragment extends Fragment implements
                                         break;
 
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
-                                Log.e("ERROR","에러쓰");
+                                Log.e("ERROR", "에러쓰");
                             }
                         }
                     });
@@ -442,54 +450,48 @@ public class Tab1_MapFragment extends Fragment implements
         date = dateFormat.format(new Date());
         String currentTime = timeFormat.format(new Date());
         //t시 40분이 넘으면 t시, 안넘으면 t-1시..단 t-1이 -1이 되면 23시로.
-        String currentTime1 = currentTime.substring(0,2);
+        String currentTime1 = currentTime.substring(0, 2);
         String currentTime2 = currentTime.substring(2);
 
-        if(Integer.parseInt(currentTime1)<11){
-            if(Integer.parseInt(currentTime2) >40){
-                time = currentTime1+"00";
-            }else{
-                if(Integer.parseInt(currentTime1)-1==-1){
-                    currentTime1 = 23+"";
-                }else{
-                    currentTime1 = "0"+(Integer.parseInt(currentTime1)-1);
+        if (Integer.parseInt(currentTime1) < 11) {
+            if (Integer.parseInt(currentTime2) > 40) {
+                time = currentTime1 + "00";
+            } else {
+                if (Integer.parseInt(currentTime1) - 1 == -1) {
+                    currentTime1 = 23 + "";
+                } else {
+                    currentTime1 = "0" + (Integer.parseInt(currentTime1) - 1);
                 }
-                time = currentTime1+"00";
+                time = currentTime1 + "00";
             }
-        }else{
-            if(Integer.parseInt(currentTime2) >40){
-                time = currentTime1+"00";
-            }else{
-                if(Integer.parseInt(currentTime1)-1==-1){
-                    currentTime1 = 23+"";
-                }else{
-                    currentTime1 = ""+(Integer.parseInt(currentTime1)-1);
+        } else {
+            if (Integer.parseInt(currentTime2) > 40) {
+                time = currentTime1 + "00";
+            } else {
+                if (Integer.parseInt(currentTime1) - 1 == -1) {
+                    currentTime1 = 23 + "";
+                } else {
+                    currentTime1 = "" + (Integer.parseInt(currentTime1) - 1);
                 }
-                time = currentTime1+"00";
+                time = currentTime1 + "00";
             }
         }
 
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
-    
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case 0:
 //                if(grantResults[0] ==PackageManager.PERMISSION_GRANTED || grantResults[1] ==PackageManager.PERMISSION_DENIED){
 //                    Toast.makeText(this, "이 앱의 내 위치 사용불가", Toast.LENGTH_SHORT).show();
 //                }
 
-                for(int i=0; i<grantResults.length; i++){
-                    if(grantResults[i] == PackageManager.PERMISSION_DENIED){
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                         Toast.makeText(getActivity(), "내 위치 사용불가", Toast.LENGTH_SHORT).show();
                         break;
                     }
@@ -499,15 +501,16 @@ public class Tab1_MapFragment extends Fragment implements
         }
     }
 
-           @Override
-           public void onStop() {
-               super.onStop();
-               try {
-                   Thread.sleep(5000);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-               locationManager.removeUpdates(locationListener);
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        locationManager.removeUpdates(locationListener);
+        Log.d("gotit", "locationManager stopped");
 
-           }
-       }
+    }
+}
