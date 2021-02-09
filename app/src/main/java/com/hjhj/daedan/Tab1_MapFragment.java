@@ -504,11 +504,11 @@ public class Tab1_MapFragment extends Fragment implements
     @Override
     public void onStop() {
         super.onStop();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         locationManager.removeUpdates(locationListener);
         Log.d("gotit", "locationManager stopped");
 
