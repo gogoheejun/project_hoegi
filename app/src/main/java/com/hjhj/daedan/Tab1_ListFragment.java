@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -81,6 +83,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
 
     CheckBox chb_school1, chb_school2, chb_school3, chb_schoolall;
     CheckBox chb_category1,chb_category2,chb_category3,chb_category4,chb_category5,chb_category6,chb_categoryall;
+    Switch favSwtich;
     ArrayList<String> filters = new ArrayList<>();
     @Override
     public void onClick(View v) {
@@ -104,21 +107,22 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                 chb_category6 = layout.findViewById(R.id.tab1_dialog_filter_category_etc);
                 chb_categoryall = layout.findViewById(R.id.tab1_dialog_filter_category_all);
 
+                favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
 
 
                 builder.setView(layout);
+
                 builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //todo: 학교필터
+
+                        // TODO: db에서 하트 체크된것먼저 다 가져오기..굳이 여기서 할필요있나
+
+                        //학교필터
                        filter_school();
 
-                       //todo: 카테고리필터
+                       //테고리필터
                         filter_category();
-
-
-
-
 
 
                     }

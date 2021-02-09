@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DaeDan"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Tab1_Map_WriteActivity"></activity>
+        <activity android:name=".UploadedViewActivity"></activity>
+        <activity android:name=".Tab1_Map_WriteActivity" />
         <activity android:name=".ProfileUpdateActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".SignupActivity" />

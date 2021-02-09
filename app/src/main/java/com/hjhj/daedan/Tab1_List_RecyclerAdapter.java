@@ -78,35 +78,18 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
                     String title = items.get(position).title;
                     String msg = items.get(position).msg;
 
+                    Intent intent = new Intent(context,UploadedViewActivity.class);
+                    intent.putExtra("nickname",nickname);
+                    intent.putExtra("school",school);
+                    intent.putExtra("title",title);
+                    intent.putExtra("msg",msg);
+                    context.startActivity(intent);
 
-
-                    LayoutInflater inflater = LayoutInflater.from(v.getContext());
-                    LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.dialog_page_list_tab1,null);
-                    ((TextView)layout.findViewById(R.id.tab1_list_dialog_tv_nickname)).setText(nickname);
-                    ((TextView)layout.findViewById(R.id.tab1_list_dialog_tv_school)).setText("("+school+")");
-                    ((TextView)layout.findViewById(R.id.tab1_list_dialog_tv_title)).setText(title);
-                    ((TextView)layout.findViewById(R.id.tab1_list_dialog_tv_msg)).setText(msg);
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                    builder.setView(layout);
-                    builder.setPositiveButton("쪽지 보내기", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //todo: 쪽지보내는 액티비티로 이동
-                            v.getContext().startActivity(new Intent(v.getContext(),ChatActivity.class));
-                        }
-                    }).setNegativeButton("닫기", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    }).show();
 
 
                 }
             });
         }
     }
-
 
 }

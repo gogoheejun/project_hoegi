@@ -1,6 +1,7 @@
 package com.hjhj.daedan;
 
 public class Tab1_List_RecyclerItem {
+    //고유id, 닉네임, 카테고리명, 사진url, 제목, 메세지, 타임렝스...
     int imgUrl;
     public String imgurl;
     public String category;

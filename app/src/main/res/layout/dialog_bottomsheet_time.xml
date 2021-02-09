@@ -19,22 +19,22 @@
             android:id="@+id/bts_time_rb1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="동아리 모집"/>
+            android:text="8시간"/>
         <RadioButton
             android:id="@+id/bts_time_rb2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="미팅 구해요"/>
+            android:text="24시간"/>
         <RadioButton
             android:id="@+id/bts_time_rb3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="스터디 모집"/>
+            android:text="3일"/>
         <RadioButton
             android:id="@+id/bottomsheet_rb4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="운동 모집"/>
+            android:text="7일"/>
 
     </RadioGroup>
 

@@ -2,6 +2,7 @@ package com.hjhj.daedan;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,12 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -78,6 +83,10 @@ public class Tab1_MapFragment extends Fragment implements
 
     LocationManager locationManager;
 
+    CheckBox chb_school1, chb_school2, chb_school3, chb_schoolall;
+    CheckBox chb_category1,chb_category2,chb_category3,chb_category4,chb_category5,chb_category6,chb_categoryall;
+    Switch favSwtich;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +122,54 @@ public class Tab1_MapFragment extends Fragment implements
         iv_write = view.findViewById(R.id.tab1MapPage_write);
         iv_filter = view.findViewById(R.id.tab1MapPage_filter);
         View myLocationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));//현재위치버튼(오른쪽위버튼) 객체가져오기
+
+
+        iv_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = LayoutInflater.from(view.getContext());
+                LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.dialog_filter_tab1,null);
+
+                chb_school1 = layout.findViewById(R.id.tab1_dialog_filter_kyunghee);
+                chb_school2 = layout.findViewById(R.id.tab1_dialog_filter_uos);
+                chb_school3 = layout.findViewById(R.id.tab1_dialog_filter_hufs);
+                chb_schoolall =  layout.findViewById(R.id.tab1_dialog_filter_allschool);
+
+                chb_category1 = layout.findViewById(R.id.tab1_dialog_filter_category_club);
+                chb_category2 = layout.findViewById(R.id.tab1_dialog_filter_category_meeting);
+                chb_category3 = layout.findViewById(R.id.tab1_dialog_filter_category_study);
+                chb_category4 = layout.findViewById(R.id.tab1_dialog_filter_category_sports);
+                chb_category5 = layout.findViewById(R.id.tab1_dialog_filter_category_party);
+                chb_category6 = layout.findViewById(R.id.tab1_dialog_filter_category_etc);
+                chb_categoryall = layout.findViewById(R.id.tab1_dialog_filter_category_all);
+
+                favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
+
+
+                builder.setView(layout);
+
+                builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // TODO: db에서 하트 체크된것먼저 다 가져오기..굳이 여기서 할필요있나
+
+                        //학교필터
+
+                        //테고리필터
+
+
+                    }
+                }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).show();
+
+            }
+        });
+
 
 
         iv_write.setOnClickListener(new View.OnClickListener() {
@@ -391,7 +448,7 @@ public class Tab1_MapFragment extends Fragment implements
                             try {
                                 switch (weather) {
                                     case "0":
-                                        Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
+                                        Glide.with(getActivity()).load(R.drawable.icon_thermometer).into(iv_weather);
                                         break;
                                     case "1":
                                         Glide.with(getActivity()).load(R.drawable.icon_rainy).into(iv_weather);
@@ -415,12 +472,12 @@ public class Tab1_MapFragment extends Fragment implements
                                         Glide.with(getActivity()).load(R.drawable.icon_snowy).into(iv_weather);
                                         break;
                                     default:
-                                        Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
+                                        Glide.with(getActivity()).load(R.drawable.icon_thermometer).into(iv_weather);
                                         break;
 
                                 }
                             } catch (Exception e) {
-                                Glide.with(getActivity()).load(R.drawable.icon_earth).into(iv_weather);
+                                Glide.with(getActivity()).load(R.drawable.icon_thermometer).into(iv_weather);
                                 Log.e("ERROR", "에러쓰");
                             }
                         }

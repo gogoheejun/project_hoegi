@@ -19,8 +19,8 @@
            android:id="@+id/page_map_iv_weather"
            android:layout_width="24dp"
            android:layout_height="24dp"
-           android:layout_marginTop="4dp"
-           android:src="@drawable/icon_earth" />
+           android:layout_marginTop="8dp"
+           android:src="@drawable/icon_thermometer" />
        <TextView
            android:id="@+id/page_map_tv_temperature"
            android:layout_width="wrap_content"
