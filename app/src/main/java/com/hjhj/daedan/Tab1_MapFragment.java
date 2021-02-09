@@ -29,9 +29,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -82,11 +84,12 @@ public class Tab1_MapFragment extends Fragment implements
     double bluedotLat, bluedotLon;
 
     LocationManager locationManager;
+    LocationListener locationListener;
 
     CheckBox chb_school1, chb_school2, chb_school3, chb_schoolall;
     CheckBox chb_category1,chb_category2,chb_category3,chb_category4,chb_category5,chb_category6,chb_categoryall;
     Switch favSwtich;
-
+    View myLocationButton;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +99,7 @@ public class Tab1_MapFragment extends Fragment implements
                 requestPermissions(permissions, 0);
             }
         }
+
     }
 
     @Nullable
@@ -118,10 +122,28 @@ public class Tab1_MapFragment extends Fragment implements
         MapsInitializer.initialize(getActivity().getApplicationContext());
         mapView.getMapAsync(this);
 
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                if (locationManager.isProviderEnabled("gps")) {
+                    location = locationManager.getLastKnownLocation("gps");
+                } else if (locationManager.isProviderEnabled("network")) {
+                    location = locationManager.getLastKnownLocation("network");
+                }
+                bluedotLat = location.getLatitude();
+                bluedotLon = location.getLongitude();
+                Log.d("gotit", "locationlistenr:" + bluedotLat + " " + bluedotLon);
+
+            }
+        };
+
         //--------------위에까진 지도부르는 기능
         iv_write = view.findViewById(R.id.tab1MapPage_write);
         iv_filter = view.findViewById(R.id.tab1MapPage_filter);
-        View myLocationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));//현재위치버튼(오른쪽위버튼) 객체가져오기
+        myLocationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));//현재위치버튼(오른쪽위버튼) 객체가져오기
 
 
         iv_filter.setOnClickListener(new View.OnClickListener() {
@@ -176,24 +198,10 @@ public class Tab1_MapFragment extends Fragment implements
             @Override
             public void onClick(View view) {
                 //현재 위치 위도경도 보내기. 그래야 작성해서 db에 저장할때 내용이랑 위치도 저장하니까
-                myLocationButton.performClick();
-                //todo:여기해야해. 지도이동시간 걸려서 현재위치 잘못가져옴;;
-//                locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    return;
-//                }
-//                //내 위치 실시간 받기
-//                if(locationManager.isProviderEnabled("gps")){
-//                    locationManager.requestLocationUpdates("gps",5000, 2,locationListener);//시간이 5초 지나거나 2미터가 지나면 갱신하겠다
-//                }else if(locationManager.isProviderEnabled("network")){
-//                    locationManager.requestLocationUpdates("network",5000,2,locationListener);
-//                }
 
-
-                //------------
                 Intent intent = new Intent(getActivity(), Tab1_Map_WriteActivity.class);
                 Bundle extra = new Bundle();
-                intent.putExtra("lat", bluedotLat); //카메라 움직이면 알아서 저 아래 getLocation함수 실행되서 lat lon 구해짐
+                intent.putExtra("lat", bluedotLat); //
                 intent.putExtra("lon", bluedotLon);
                 startActivity(intent, extra);
 
@@ -215,25 +223,10 @@ public class Tab1_MapFragment extends Fragment implements
         } else if (locationManager.isProviderEnabled("network")) {
             locationManager.requestLocationUpdates("network", 5000, 2, locationListener);
         }
+//        myLocationButton.performClick();
+        mapView.getMapAsync(this);
+
     }
-
-    LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            if (locationManager.isProviderEnabled("gps")) {
-                location = locationManager.getLastKnownLocation("gps");
-            } else if (locationManager.isProviderEnabled("network")) {
-                location = locationManager.getLastKnownLocation("network");
-            }
-            bluedotLat = location.getLatitude();
-            bluedotLon = location.getLongitude();
-            Log.d("gotit", "locationlistenr:" + bluedotLat + " " + bluedotLon);
-
-        }
-    };
 
 
     @Override
@@ -250,20 +243,23 @@ public class Tab1_MapFragment extends Fragment implements
 
         //----------지도준비됨
 
-
-        LatLng seoul = new LatLng(37.562087, 127.035192);
-//                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15));//줌 1~25
-//                gMap.addMarker(new MarkerOptions().position(seoul).title("Title").snippet("Marker Description"));
-
-//                CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
-        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//
+//        LatLng seoul = new LatLng(37.562087, 127.035192);
+//
+//        CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
+//        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         //아래 두줄이 신의 한수.ㅠㅠㅠ감격
         gMap.setOnCameraMoveListener(this);
         gMap.setOnCameraMoveStartedListener(this);
+
+
+        LatLng latLng = new LatLng(bluedotLat,bluedotLon);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,12 );
+        gMap.animateCamera(cameraUpdate);
+
     }
+
 
 
     @Override
