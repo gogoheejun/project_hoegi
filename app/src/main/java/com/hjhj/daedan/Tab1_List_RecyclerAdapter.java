@@ -1,14 +1,10 @@
 package com.hjhj.daedan;
 
-import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -70,7 +66,6 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //todo:
 
                     int position = getLayoutPosition();
                     String nickname = items.get(position).nickname;
@@ -78,7 +73,7 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
                     String title = items.get(position).title;
                     String msg = items.get(position).msg;
 
-                    Intent intent = new Intent(context,UploadedViewActivity.class);
+                    Intent intent = new Intent(context, WatchViewActivity.class);
                     intent.putExtra("nickname",nickname);
                     intent.putExtra("school",school);
                     intent.putExtra("title",title);

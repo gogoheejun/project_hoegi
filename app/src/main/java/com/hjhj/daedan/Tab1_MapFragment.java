@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -38,8 +41,10 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -72,7 +77,7 @@ public class Tab1_MapFragment extends Fragment implements
         OnMapReadyCallback {
     GoogleMap gMap;
     MapView mapView;
-    MarkerOptions myMarker = null;
+
     TextView tv_temperature;
     ImageView iv_weather;
     String weather, temperature;
@@ -102,11 +107,13 @@ public class Tab1_MapFragment extends Fragment implements
 
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("gotit","onCreatView start");
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
 
         View view = inflater.inflate(R.layout.page_map_tab1, container, false);
 
@@ -137,14 +144,18 @@ public class Tab1_MapFragment extends Fragment implements
                 bluedotLon = location.getLongitude();
                 Log.d("gotit", "locationlistenr:" + bluedotLat + " " + bluedotLon);
 
+
+                LatLng latLng = new LatLng(bluedotLat, bluedotLon);
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
             }
         };
 
         //--------------위에까진 지도부르는 기능
+
+        //필터버튼 버튼 누를때
         iv_write = view.findViewById(R.id.tab1MapPage_write);
         iv_filter = view.findViewById(R.id.tab1MapPage_filter);
         myLocationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));//현재위치버튼(오른쪽위버튼) 객체가져오기
-
 
         iv_filter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +204,7 @@ public class Tab1_MapFragment extends Fragment implements
         });
 
 
-
+        //글쓰기 버튼 누를때
         iv_write.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -211,27 +222,21 @@ public class Tab1_MapFragment extends Fragment implements
         return view;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        //내 위치 실시간 받기
-        if (locationManager.isProviderEnabled("gps")) {
-            locationManager.requestLocationUpdates("gps", 5000, 2, locationListener);//시간이 5초 지나거나 2미터가 지나면 갱신하겠다
-        } else if (locationManager.isProviderEnabled("network")) {
-            locationManager.requestLocationUpdates("network", 5000, 2, locationListener);
-        }
-//        myLocationButton.performClick();
-        mapView.getMapAsync(this);
-
+//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+        Log.d("gotit","onresume start");
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("MOVE", "map ready");
+        Log.d("gotit", "onMapReday start");
         gMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -243,7 +248,7 @@ public class Tab1_MapFragment extends Fragment implements
 
         //----------지도준비됨
 
-//
+
 //        LatLng seoul = new LatLng(37.562087, 127.035192);
 //
 //        CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
@@ -254,10 +259,35 @@ public class Tab1_MapFragment extends Fragment implements
         gMap.setOnCameraMoveStartedListener(this);
 
 
-        LatLng latLng = new LatLng(bluedotLat,bluedotLon);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,12 );
-        gMap.animateCamera(cameraUpdate);
+        if (locationManager.isProviderEnabled("gps")) {
+            locationManager.requestLocationUpdates("gps", 5000, 2, locationListener);//시간이 5초 지나거나 2미터가 지나면 갱신하겠다
+            Log.d("gotit","in if문.gps in on map ready()");
 
+        } else if (locationManager.isProviderEnabled("network")) {
+            locationManager.requestLocationUpdates("network", 5000, 2, locationListener);
+            Log.d("gotit","in if문.network in on map ready()");
+        }
+
+
+        Log.d("gotit","before adding marker");
+        //todo: db에서 위치, 글쓴이아이디, title, 글쓴시간 가져와서 지도위 표시.( 누르면 WatchView activity로 이동..글쓴이아이디 인텐트해서 더 상세한정보 봄)
+        //
+        //일단 더미로 해봄----함수로 만들어야 필터로 거를때 다시할수있지않을까...그니까 함수누르면 지도위마커 다삭제-->필터에선택된애만 db에서 받아와서 다시 표시
+        String category = "파티 초대";
+        String msgtitle = "소주파티합니다";
+        String time = "2월10일 12시30분";
+        MarkerOptions marker = new MarkerOptions();
+        marker.title(category);
+        marker.snippet(msgtitle);
+        LatLng markerLoc = new LatLng(37.532680,127.024612);
+        marker.position(markerLoc);
+        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_marker);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
+        marker.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+        gMap.addMarker(marker);
+
+        Log.d("gotit","end of on map ready");
     }
 
 
@@ -368,7 +398,6 @@ public class Tab1_MapFragment extends Fragment implements
 //        if(x<1) x=55;
 //        if(y<1) y=127;
         server = url1 + api + url2 + date + "&base_time=" + time + "&nx=" + intX + "&ny=" + intY;
-        //todo: 현재 좌표 가져와서 변환해서 넣어야함
 
         new Thread() {
             @Override

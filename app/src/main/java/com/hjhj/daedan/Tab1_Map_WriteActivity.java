@@ -47,7 +47,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
     }
 
     public void click_writeOk(View view) {
-        //todo: 작성된 글을 게시판 db에 업로드
+        //todo: 작성된 글을 게시판 db에 업로드 : 글쓴이아이디, 카테고리, 등록유지시간, 업로드시간, 제목,내용, 이미지url,위치 올려야 함.
 
     }
 

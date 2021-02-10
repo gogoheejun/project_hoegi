@@ -29,6 +29,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //todo: 데이터에서 받아와야 함. 아이템 이미지url 스트링으로 뉴 해야(지금은 임시로 인트)
+        //
         loadData();
     }
 
