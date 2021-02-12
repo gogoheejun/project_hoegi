@@ -503,7 +503,7 @@ public class Tab1_MapFragment extends Fragment implements
                                 }
                             } catch (Exception e) {
                                 Glide.with(getActivity()).load(R.drawable.icon_thermometer).into(iv_weather);
-                                Log.e("ERROR", "에러쓰");
+                                Log.e("ERROR", "온도 에러");
                             }
                         }
                     });

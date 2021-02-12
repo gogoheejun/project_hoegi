@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "257574071091",
+    "project_id": "projecthoegi",
+    "storage_bucket": "projecthoegi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257574071091:android:feb449807630e827e4ec46",
+        "android_client_info": {
+          "package_name": "com.hjhj.daedan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257574071091-b3i7179rmahc6apq4fe4rfvls57hf3dp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDri1fp8tbmUmIwLvkaw-0fUaPpgW7hf2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257574071091-b3i7179rmahc6apq4fe4rfvls57hf3dp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "257574071091-gurhc432ilklnaafvmn8s6t27pmcuo3r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hjhj.daedan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

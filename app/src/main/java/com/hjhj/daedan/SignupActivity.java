@@ -1,27 +1,33 @@
 package com.hjhj.daedan;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 public class SignupActivity extends AppCompatActivity {
     ImageView iv_profile;
-    EditText nickname, email, checknumber, password, password2;
+    EditText et_nickname, et_email, et_checknumber, et_password, et_password2;
     Uri imgUri;//선택된 이미지의 컨텐츠 주소(경로)
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +36,14 @@ public class SignupActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         iv_profile = findViewById(R.id.signupactivity_iv_profile);
-        nickname = findViewById(R.id.signupactivity_et_nickname);
-        email = findViewById(R.id.signupactivity_et_email);
-        checknumber = findViewById(R.id.signupactivity_et_checknumber);
-        password = findViewById(R.id.signupactivity_et_password);
-        password2 = findViewById(R.id.signupactivity_et_password2);
+        et_nickname = findViewById(R.id.signupactivity_et_nickname);
+        et_email = findViewById(R.id.signupactivity_et_email);
+        et_checknumber = findViewById(R.id.signupactivity_et_checknumber);
+        et_password = findViewById(R.id.signupactivity_et_password);
+        et_password2 = findViewById(R.id.signupactivity_et_password2);
+
+        mAuth = FirebaseAuth.getInstance();
+
 
     }
 
@@ -59,7 +68,7 @@ public class SignupActivity extends AppCompatActivity {
         String substring1 ="@hufs.ac.kr";
         String substring2 ="@khu.ac.kr";
         String substring3 ="@uos.ac.kr";
-        if(email.getText().toString().contains(substring1)|| email.getText().toString().contains(substring2)|| email.getText().toString().contains(substring3)){
+        if(et_email.getText().toString().contains(substring1)|| et_email.getText().toString().contains(substring2)|| et_email.getText().toString().contains(substring3)){
 
         }else{
             Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
@@ -78,7 +87,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void click_ok(View view) {
 
-        if(nickname.getText().toString().length() <3){
+        if(et_nickname.getText().toString().length() <3){
             Toast.makeText(this, "닉네임은 3문자 이상 입력해주세요", Toast.LENGTH_LONG).show();
             return;
         }
@@ -86,14 +95,50 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(this, "인증번호를 다시 확인해주세요", Toast.LENGTH_LONG).show();
             return;
         }
-        if(!password.getText().toString().equals(password2.getText().toString())){
+        if(!et_password.getText().toString().equals(et_password2.getText().toString())){
             Toast.makeText(this, "비밀번호를 다시 확인해주세요", Toast.LENGTH_LONG).show();
             return;
         }
         else{
             //todo: db에 프로필, 닉네임, 이메일 저장,,, auth에도 등록
-            startActivity(new Intent(this, MainActivity.class));
-            Toast.makeText(this, "입장!!", Toast.LENGTH_SHORT).show();
+//            startActivity(new Intent(this, MainActivity.class));
+//            Toast.makeText(this, "입장!!", Toast.LENGTH_SHORT).show();
+            
+            signup();
+        }
+
+    }
+
+    private void signup() {
+
+        String email = et_email.getText().toString();
+        String password = et_password.getText().toString();
+        String password2 = et_password2.getText().toString();
+
+        if(email.length()>0 && password.length()>0){
+            if(password.equals(password2)){
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    Toast.makeText(SignupActivity.this, "회원가입성공", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+
+                                }else{
+                                    if(task.getException() != null)
+                                        Toast.makeText(SignupActivity.this, ""+task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }else{
+                Toast.makeText(this, "비밀번호 일치안합니다!", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(this, "이메일 또는 비번입력!", Toast.LENGTH_SHORT).show();
         }
 
     }
