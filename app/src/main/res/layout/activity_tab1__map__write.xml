@@ -66,6 +66,7 @@
             android:layout_height="1dp"
             android:background="@color/green3"/>
         <EditText
+            android:id="@+id/map_write_et_title"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:paddingLeft="8dp"
@@ -79,6 +80,7 @@
             android:background="@color/green3"/>
 
         <EditText
+            android:id="@+id/map_write_et_msg"
             android:layout_width="match_parent"
             android:layout_height="500dp"
             android:background="@drawable/bg_notpressed_box_transparent"
