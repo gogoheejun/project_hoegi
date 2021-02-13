@@ -60,8 +60,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
 
     //db--
     String userid;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference markersRef;
+
     String uploadtime;
     String writeimgUrl, userEmail;
     double lat, lon;
@@ -86,9 +85,6 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
         dateFormat.setTimeZone(zone);
         uploadtime = dateFormat.format(new Date());
 
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        markersRef = firebaseDatabase.getReference("markers");
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -174,7 +170,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                                         nickname = documentSnapshot.getString("nickname");
 
 
-                                        MarkersItem item = new MarkersItem(school, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
+                                        MarkersItem item = new MarkersItem(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
 
                                         uploadToFirestore(firestore, item);
 
@@ -198,8 +194,9 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         if (documentSnapshot.exists()) {
                             Log.d("TAG", "exists!" + documentSnapshot.getString("nickname"));
+                            //닉네임을 가져온거 성공하면, 파이어스토어에 업로드!!
                             nickname = documentSnapshot.getString("nickname");
-                            item = new MarkersItem(school, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
+                            item = new MarkersItem(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
 
                             uploadToFirestore(firestore, item);
 

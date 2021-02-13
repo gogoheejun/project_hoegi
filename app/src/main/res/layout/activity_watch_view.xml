@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,12 +12,9 @@
     <androidx.core.widget.NestedScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        xmlns:android="http://schemas.android.com/apk/res/android" >
+        android:layout_weight="1">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -26,16 +24,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
-                    android:id="@+id/uploadedView_tv_id"
+                    android:id="@+id/WatchView_tv_id"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="16dp"
                     android:text="아이디+학교"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
+
                 <ToggleButton
-                    android:id="@+id/uploadedView_toggle_fav"
+                    android:id="@+id/WatchView_toggle_fav"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_alignParentRight="true"
@@ -44,29 +44,30 @@
                     android:textOn=" "
                     android:textOff=" "/>
                 <TextView
-                    android:id="@+id/uploadedView_tv_category"
+                    android:id="@+id/WatchView_tv_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="[카테고리명]"
-                    android:layout_toLeftOf="@id/uploadedView_toggle_fav"
+                    android:layout_toLeftOf="@id/WatchView_toggle_fav"
                     android:layout_marginRight="12dp"
                     android:layout_marginTop="12dp"/>
                 <TextView
+                    android:id="@+id/WatchView_tv_uploadedTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:text="2월09일 16:16"
-                    android:layout_toLeftOf="@id/uploadedView_tv_timeLength"
-                    android:layout_alignTop="@id/uploadedView_tv_timeLength"/>
+                    android:layout_toLeftOf="@id/WatchView_tv_timeLength"
+                    android:layout_alignTop="@id/WatchView_tv_timeLength"/>
                 <TextView
-                    android:id="@+id/uploadedView_tv_timeLength"
+                    android:id="@+id/WatchView_tv_timeLength"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="4dp"
                     android:textSize="12sp"
                     android:text="+3일 후 삭제"
-                    android:layout_below="@id/uploadedView_tv_category"
-                    android:layout_alignRight="@id/uploadedView_tv_category"/>
+                    android:layout_below="@id/WatchView_tv_category"
+                    android:layout_alignRight="@id/WatchView_tv_category"/>
 
 
             </RelativeLayout>
@@ -76,6 +77,7 @@
                 android:layout_height="1dp"
                 android:background="@color/green3"/>
             <ImageView
+                android:id="@+id/WatchView_iv_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -88,7 +90,7 @@
                 android:layout_height="1dp"
                 android:background="@color/green3"/>
             <TextView
-                android:id="@+id/uploadedView_tv_title"
+                android:id="@+id/WatchView_tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -102,7 +104,7 @@
                 android:layout_height="1dp"
                 android:background="@color/green3"/>
             <TextView
-                android:id="@+id/uploadedView_tv_msg"
+                android:id="@+id/WatchView_tv_msg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="top"

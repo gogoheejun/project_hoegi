@@ -1,17 +1,17 @@
 package com.hjhj.daedan;
 //글쓴이아이디, 카테고리, 등록유지시간, 업로드시간, 제목,내용, 이미지url,위치 올려야 함.
 public class MarkersItem {
-    public String school;
-    public String nickname;
-    public String userid;
-    public String category;
-    public String uploadTime;
-    public String timeLength;
-    public String title;
-    public String message;
-    public String imgUrl;
-    public String lat;
-    public String lon;
+    public static String school;
+    public static String nickname;
+    public static String userid;
+    public static String category;
+    public static String uploadTime;
+    public static String timeLength;
+    public static String title;
+    public static String message;
+    public static String imgUrl;
+    public static String lat;
+    public static String lon;
 
     public MarkersItem() {
     }
