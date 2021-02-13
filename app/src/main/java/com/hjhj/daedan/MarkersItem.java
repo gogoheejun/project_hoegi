@@ -1,6 +1,7 @@
 package com.hjhj.daedan;
 //글쓴이아이디, 카테고리, 등록유지시간, 업로드시간, 제목,내용, 이미지url,위치 올려야 함.
 public class MarkersItem {
+    public String school;
     public String nickname;
     public String userid;
     public String category;
@@ -15,7 +16,8 @@ public class MarkersItem {
     public MarkersItem() {
     }
 
-    public MarkersItem(String nickname, String userid, String category, String uploadTime, String timeLength, String title, String message, String imgUrl, String lat, String lon) {
+    public MarkersItem(String school, String nickname, String userid, String category, String uploadTime, String timeLength, String title, String message, String imgUrl, String lat, String lon) {
+        this.school = school;
         this.nickname = nickname;
         this.userid = userid;
         this.category = category;
@@ -28,7 +30,8 @@ public class MarkersItem {
         this.lon = lon;
     }
     //이미지 선택 안했을때
-    public MarkersItem(String nickname, String userid, String category, String uploadTime, String timeLength, String title, String message, String lat, String lon) {
+    public MarkersItem(String school, String nickname, String userid, String category, String uploadTime, String timeLength, String title, String message, String lat, String lon) {
+        this.school = school;
         this.nickname = nickname;
         this.userid = userid;
         this.category = category;

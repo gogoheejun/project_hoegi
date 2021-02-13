@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -14,13 +15,27 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class SignupActivity extends AppCompatActivity {
     ImageView iv_profile;
@@ -28,6 +43,7 @@ public class SignupActivity extends AppCompatActivity {
     Uri imgUri;//선택된 이미지의 컨텐츠 주소(경로)
 
     private FirebaseAuth mAuth;
+    String profileUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,16 +111,75 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(this, "인증번호를 다시 확인해주세요", Toast.LENGTH_LONG).show();
             return;
         }
-        if(!et_password.getText().toString().equals(et_password2.getText().toString())){
-            Toast.makeText(this, "비밀번호를 다시 확인해주세요", Toast.LENGTH_LONG).show();
-            return;
-        }
+
         else{
             //todo: db에 프로필, 닉네임, 이메일 저장,,, auth에도 등록
-//            startActivity(new Intent(this, MainActivity.class));
-//            Toast.makeText(this, "입장!!", Toast.LENGTH_SHORT).show();
-            
+
+
             signup();
+
+            //프로필사진을 firebase storage에저장
+            //현재시간
+            TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm", Locale.KOREAN);
+            dateFormat.setTimeZone(zone);
+            String uploadtime = dateFormat.format(new Date());
+            if(imgUri != null){
+                String fileName = uploadtime+"png";
+                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                StorageReference imgRef = firebaseStorage.getReference("profile/"+fileName);
+
+                UploadTask uploadTask = imgRef.putFile(imgUri);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                profileUrl = uri.toString();
+//                                Toast.makeText(SignupActivity.this, "프로필이미지 firestorage에 저장쓰", Toast.LENGTH_SHORT).show();
+
+                                //프로필을 스토리지에 올렸으면, 그 url을 유저db에다가 보관
+
+
+                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                                Log.d("process","1111");
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                Log.d("process","2222");
+                                String userid = user.getUid();
+                                Log.d("process","3333");
+                                String userEmail = user.getEmail();
+                                Log.d("process","4444");
+                                UsersItem item = new UsersItem(profileUrl,et_nickname.getText().toString(),userid, userEmail); //프로필이미지, 닉네임, userid, 이메일
+                                Log.d("process","5555");
+                                firestore.collection("users").document(userid).set(item)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d("process","6666");
+                                                Toast.makeText(SignupActivity.this, "정보등록 성공", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d("process","7777");
+                                                Toast.makeText(SignupActivity.this, "정보등록 실패ㅠ", Toast.LENGTH_SHORT).show();
+                                                Log.w("TAG",e);
+                                            }
+                                        });
+
+                            }
+                        });
+                    }
+                });
+            }
+
+
+            Log.d("process","8888");
         }
 
     }
@@ -124,9 +199,6 @@ public class SignupActivity extends AppCompatActivity {
                                 if(task.isSuccessful()){
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(SignupActivity.this, "회원가입성공", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
 
                                 }else{
                                     if(task.getException() != null)
