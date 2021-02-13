@@ -79,7 +79,7 @@
             <ImageView
                 android:id="@+id/WatchView_iv_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:layout_gravity="center"
                 android:scaleType="fitCenter"
                 android:src="@drawable/test_luffy"

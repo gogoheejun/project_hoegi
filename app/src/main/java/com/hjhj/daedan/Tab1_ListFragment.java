@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -18,10 +17,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Tab1_ListFragment extends Fragment implements View.OnClickListener {
-    ArrayList<Tab1_List_RecyclerItem> items = new ArrayList<Tab1_List_RecyclerItem>();
+    ArrayList<MarkersItem> items = new ArrayList<MarkersItem>();
     RecyclerView recyclerView;
     Tab1_List_RecyclerAdapter adapter;
 
@@ -29,13 +35,14 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //todo: 데이터에서 받아와야 함. 아이템 이미지url 스트링으로 뉴 해야(지금은 임시로 인트)
-        //
+        Log.d("markeritem", "list_onCreate");
         loadData();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("markeritem", "list_onCreatView");
         View view = inflater.inflate(R.layout.page_list_tab1,container,false);
         ImageView filter = view.findViewById(R.id.tab1MapPage_filter);
         filter.setOnClickListener(this);
@@ -45,38 +52,88 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.d("markeritem", "list_oncViewCreated");
         recyclerView = view.findViewById(R.id.tab1ListPage_recycler);
-        adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
-        recyclerView.setAdapter(adapter);
+//        adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
+//        recyclerView.setAdapter(adapter);
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("markeritem", "list_onResume");
+//
+//        adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
+//        recyclerView.setAdapter(adapter);
+    }
+
     void loadData(){
-        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo, "스터디 모집",
-                "홍길동","한국외국어대학교","스터디모집해요","토익 스터디하고싶어요~ 토익만점가즈아~~~ 헬로 봉주르 니하오!","3일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-                "아이린","서울시립대학교","파티모집해요","외국인 교환학생과 와인파티합니다 어서서오세요. 참가비 만원~ 기린포차로 오세요","1일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
-                "수지","경희대학교","1축구할 사람!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"스터디 모집",
-                "aaa","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
-                "bbb","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
-                "ccc","경희대학교","2축구할 사람!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"스터디 모집",
-                "가가가","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-                "나나나","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-                "다다다","경희대학교","3파티해요!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"파티 초대",
-                "라라라","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-                "마마마","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
-        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"스터디 모집",
-                "바바바","경희대학교","4스터디모집!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
+        Log.d("markeritem", "list_loadData");
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        Map<String, Object> marker = document.getData();
+//                        MarkersItem markersItem = new MarkersItem();
+//
+//                        markersItem.lat = marker.get("lat").toString();
+//                        markersItem.lon = marker.get("lon").toString();
+//                        markersItem.title = marker.get("title").toString();
+//                        markersItem.category = marker.get("category").toString();
+//                        markersItem.uploadTime = marker.get("uploadTime").toString();
+//                        markersItem.school = marker.get("school").toString();
+//                        markersItem.message = marker.get("message").toString();
+//                        markersItem.timeLength = marker.get("timeLength").toString();
+//                        markersItem.userid = marker.get("userid").toString();
+//                        markersItem.imgUrl = marker.get("imgUrl").toString();
+//                        markersItem.nickname = marker.get("nickname").toString();
+
+                        items.add( new MarkersItem(marker.get("school").toString(),marker.get("nickname").toString(),marker.get("userid").toString(),marker.get("category").toString(),
+                                marker.get("uploadTime").toString(), marker.get("timeLength").toString(),marker.get("title").toString(),marker.get("message").toString(), marker.get("imgUrl").toString(),
+                                marker.get("lat").toString(), marker.get("lon").toString()));
+
+                        Log.d("markeritem", marker.get("school").toString());
+                        Log.d("markeritem", marker.get("nickname").toString());
+                        Log.d("markeritem",marker.get("userid").toString());
+                        Log.d("markeritem", marker.get("category").toString());
+                        Log.d("markeritem", marker.get("uploadTime").toString());
+                        Log.d("markeritem",  marker.get("timeLength").toString());
+
+                    }
+                    Log.d("markeritem",items.get(0).nickname+"\n"+items.get(1).nickname+"\n"+items.get(2).nickname);
+                    adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+        });
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo, "스터디 모집",
+//                "홍길동","한국외국어대학교","스터디모집해요","토익 스터디하고싶어요~ 토익만점가즈아~~~ 헬로 봉주르 니하오!","3일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
+//                "아이린","서울시립대학교","파티모집해요","외국인 교환학생과 와인파티합니다 어서서오세요. 참가비 만원~ 기린포차로 오세요","1일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
+//                "수지","경희대학교","1축구할 사람!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"스터디 모집",
+//                "aaa","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
+//                "bbb","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
+//                "ccc","경희대학교","2축구할 사람!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"스터디 모집",
+//                "가가가","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
+//                "나나나","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
+//                "다다다","경희대학교","3파티해요!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"파티 초대",
+//                "라라라","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
+//                "마마마","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
+//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"스터디 모집",
+//                "바바바","경희대학교","4스터디모집!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
 
     }
 

@@ -2,6 +2,7 @@ package com.hjhj.daedan;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
 
     Context context;
-    ArrayList<Tab1_List_RecyclerItem> items;
+    ArrayList<MarkersItem> items;
 
-    public Tab1_List_RecyclerAdapter(Context context, ArrayList<Tab1_List_RecyclerItem> items) {
+    public Tab1_List_RecyclerAdapter(Context context, ArrayList<MarkersItem> items) {
+        Log.d("markeritem", "111");
+
         this.context = context;
         this.items = items;
     }
@@ -29,6 +32,8 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d("markeritem", "222");
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View itemview = inflater.inflate(R.layout.item_recycler_list_tab1, parent, false);
         VH holder = new VH(itemview);
@@ -37,11 +42,13 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Log.d("markeritem", "333");
+
         VH vh =(VH)holder;
-        Tab1_List_RecyclerItem item = items.get(position);
+        MarkersItem item = items.get(position);
         vh.tvNameSchool.setText(item.nickname+"("+item.school+")"); //"("+item.school+")"
         vh.tvMsg.setText(item.title);
-        vh.tvLefttime.setText(item.duration);
+        vh.tvLefttime.setText(item.timeLength);
 
         Glide.with(context).load(item.imgUrl).into(vh.ivCategory);
     }
@@ -51,6 +58,7 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
         return items.size();
     }
     class VH extends RecyclerView.ViewHolder{
+
         CircleImageView ivCategory;
         TextView tvNameSchool;
         TextView tvMsg;
@@ -58,6 +66,8 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
 
         public VH(@NonNull View itemView) {
             super(itemView);
+            Log.d("markeritem", "444");
+
             this.ivCategory = itemView.findViewById(R.id.tab1_recycler_item_iv);
             this.tvNameSchool =  itemView.findViewById(R.id.tab1_recycler_item_nameschool);
             this.tvMsg = itemView.findViewById(R.id.tab1_recycler_item_msg);
@@ -66,20 +76,25 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("markeritem", "555");
 
                     int position = getLayoutPosition();
-                    String nickname = items.get(position).nickname;
-                    String school = items.get(position).school;
-                    String title = items.get(position).title;
-                    String msg = items.get(position).msg;
+                    String userid = items.get(position).userid;
+//                    String nickname = items.get(position).nickname;
+//                    String school = items.get(position).school;
+//                    String title = items.get(position).title;
+//                    String msg = items.get(position).message;
+//
+//                    Intent intent = new Intent(context, WatchViewActivity.class);
+//                    intent.putExtra("nickname",nickname);
+//                    intent.putExtra("school",school);
+//                    intent.putExtra("title",title);
+//                    intent.putExtra("msg",msg);
+//                    context.startActivity(intent);
 
-                    Intent intent = new Intent(context, WatchViewActivity.class);
-                    intent.putExtra("nickname",nickname);
-                    intent.putExtra("school",school);
-                    intent.putExtra("title",title);
-                    intent.putExtra("msg",msg);
+                    Intent intent = new Intent(context,WatchViewActivity.class);
+                    intent.putExtra("markerUserid",userid);
                     context.startActivity(intent);
-
 
 
                 }

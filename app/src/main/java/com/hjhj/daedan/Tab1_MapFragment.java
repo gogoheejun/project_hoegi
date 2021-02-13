@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -36,19 +34,15 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -301,26 +295,26 @@ public class Tab1_MapFragment extends Fragment implements
                     Log.d("TAG","222");
                     for (QueryDocumentSnapshot document : task.getResult()){
                         Map<String, Object> marker = document.getData();
-                        MarkersItem.lat = marker.get("lat").toString();
-                        MarkersItem.lon = marker.get("lon").toString();
-                        MarkersItem.title = marker.get("title").toString();
-                        MarkersItem.category = marker.get("category").toString();
-                        MarkersItem.uploadTime = marker.get("uploadTime").toString();
-                        MarkersItem.school = marker.get("school").toString();
-                        MarkersItem.message = marker.get("message").toString();
-                        MarkersItem.timeLength = marker.get("timeLength").toString();
-                        MarkersItem.userid = marker.get("userid").toString();
-                        MarkersItem.imgUrl = marker.get("imgUrl").toString();
-                        MarkersItem.nickname = marker.get("nickname").toString();
+                        MarkersItem_static.lat = marker.get("lat").toString();
+                        MarkersItem_static.lon = marker.get("lon").toString();
+                        MarkersItem_static.title = marker.get("title").toString();
+                        MarkersItem_static.category = marker.get("category").toString();
+                        MarkersItem_static.uploadTime = marker.get("uploadTime").toString();
+                        MarkersItem_static.school = marker.get("school").toString();
+                        MarkersItem_static.message = marker.get("message").toString();
+                        MarkersItem_static.timeLength = marker.get("timeLength").toString();
+                        MarkersItem_static.userid = marker.get("userid").toString();
+                        MarkersItem_static.imgUrl = marker.get("imgUrl").toString();
+                        MarkersItem_static.nickname = marker.get("nickname").toString();
 
-                        LatLng markerLoc = new LatLng(Double.parseDouble(MarkersItem.lat),Double.parseDouble(MarkersItem.lon));
+                        LatLng markerLoc = new LatLng(Double.parseDouble(MarkersItem_static.lat),Double.parseDouble(MarkersItem_static.lon));
 
 
                         Marker markers = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
-                                .title(MarkersItem.category)
-                                .snippet("["+MarkersItem.uploadTime+"] "+MarkersItem.title));
-                        markers.setTag(MarkersItem.userid);
+                                .title(MarkersItem_static.category)
+                                .snippet("["+ MarkersItem_static.uploadTime+"] "+ MarkersItem_static.title));
+                        markers.setTag(MarkersItem_static.userid);
                         Log.d("TAG","333"+markers.getTag());
 
                         gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {

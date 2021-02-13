@@ -17,7 +17,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,27 +24,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class Tab1_Map_WriteActivity extends AppCompatActivity {
@@ -65,7 +54,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
     String writeimgUrl, userEmail;
     double lat, lon;
     FirebaseUser user;
-    MarkersItem item;
+    MarkersItem_static item;
 
 
     @Override
@@ -170,7 +159,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                                         nickname = documentSnapshot.getString("nickname");
 
 
-                                        MarkersItem item = new MarkersItem(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
+                                        MarkersItem_static item = new MarkersItem_static(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
 
                                         uploadToFirestore(firestore, item);
 
@@ -196,7 +185,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                             Log.d("TAG", "exists!" + documentSnapshot.getString("nickname"));
                             //닉네임을 가져온거 성공하면, 파이어스토어에 업로드!!
                             nickname = documentSnapshot.getString("nickname");
-                            item = new MarkersItem(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
+                            item = new MarkersItem_static(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
 
                             uploadToFirestore(firestore, item);
 
@@ -211,7 +200,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadToFirestore(FirebaseFirestore firestore, MarkersItem item) {
+    public void uploadToFirestore(FirebaseFirestore firestore, MarkersItem_static item) {
         firestore.collection("markers").document(userid).set(item)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
