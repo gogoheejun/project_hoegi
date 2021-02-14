@@ -12,12 +12,19 @@
         android:text="학교"/>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="180dp"
+        android:scrollbars="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <CheckBox
+                android:id="@+id/tab1_dialog_filter_allschool"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="전체"
+                android:buttonTint="@color/green2"
+                android:checked="true"/>
             <CheckBox
                 android:id="@+id/tab1_dialog_filter_kyunghee"
                 android:layout_width="match_parent"
@@ -36,12 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="한국외국어대학교"
                 android:buttonTint="@color/green2"/>
-            <CheckBox
-                android:id="@+id/tab1_dialog_filter_allschool"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="전체"
-                android:buttonTint="@color/green2"/>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 <!--  ======================-->
@@ -52,7 +54,8 @@
         android:text="카테고리"/>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="300dp"
+        android:scrollbars="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,7 +77,7 @@
                 android:id="@+id/tab1_dialog_filter_category_meeting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="미팅해요"
+                android:text="미팅 구해요"
                 android:buttonTint="@color/green2"/>
             <CheckBox
                 android:id="@+id/tab1_dialog_filter_category_study"

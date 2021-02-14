@@ -137,7 +137,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
 
     }
 
-
+// TODO: 2021-02-14 이제 필터링해야함!! 
 
     CheckBox chb_school1, chb_school2, chb_school3, chb_schoolall;
     CheckBox chb_category1,chb_category2,chb_category3,chb_category4,chb_category5,chb_category6,chb_categoryall;

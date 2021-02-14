@@ -39,7 +39,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -188,6 +187,15 @@ public class Tab1_MapFragment extends Fragment implements
 
                         // TODO: db에서 하트 체크된것먼저 다 가져오기..굳이 여기서 할필요있나
 
+                        filteredSchool1= null;
+                        filteredSchool2 = null;
+                        filteredSchool3 = null;
+                        filteredCategory1 =null;
+                        filteredCategory2 =null;
+                        filteredCategory3 =null;
+                        filteredCategory4 =null;
+                        filteredCategory5 =null;
+                        filteredCategory6 =null;
                         //학교필터
                         if (chb_school1.isChecked() || chb_schoolall.isChecked()) filteredSchool1 = chb_school1.getText().toString();
                         if (chb_school2.isChecked() || chb_schoolall.isChecked()) filteredSchool2 = chb_school2.getText().toString();
@@ -200,6 +208,8 @@ public class Tab1_MapFragment extends Fragment implements
                         if (chb_category5.isChecked() || chb_categoryall.isChecked()) filteredCategory5 = chb_category5.getText().toString();
                         if (chb_category6.isChecked() || chb_categoryall.isChecked()) filteredCategory6 = chb_category6.getText().toString();
 
+                        gMap.clear();
+                        drawMarkersWithFilters();
 
                     }
                 }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -259,11 +269,6 @@ public class Tab1_MapFragment extends Fragment implements
         //----------지도준비됨
 
 
-//        LatLng seoul = new LatLng(37.562087, 127.035192);
-//
-//        CameraPosition cameraPosition = new CameraPosition.Builder().target(seoul).zoom(12).build();
-//        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         //아래 두줄이 신의 한수.ㅠㅠㅠ감격
         gMap.setOnCameraMoveListener(this);
         gMap.setOnCameraMoveStartedListener(this);
@@ -280,11 +285,81 @@ public class Tab1_MapFragment extends Fragment implements
 
 
         Log.d("gotit","before adding marker");
-        //todo: db에서 위치, 글쓴이아이디, title, 글쓴시간 가져와서 지도위 표시.( 누르면 WatchView activity로 이동..글쓴이아이디 인텐트해서 더 상세한정보 봄)
-        //
-        //일단 더미로 해봄----함수로 만들어야 필터로 거를때 다시할수있지않을까...그니까 함수누르면 지도위마커 다삭제-->필터에선택된애만 db에서 받아와서 다시 표시
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        drawMarkers();
+        Log.d("gotit","end of on map ready");
+    }
+
+    //필터조건 반영한 마커불러오기
+    public void drawMarkersWithFilters(){
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        Log.d("TAG","afterFilter 111");
+        firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                markers = new MarkerOptions();
+                if(task.isSuccessful()){
+                    Log.d("TAG","afterFilter 222");
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        Log.d("TAG","afterFilter 2.5");
+                        Map<String, Object> marker = document.getData();
+                        MarkersItem_static.lat = marker.get("lat").toString();
+                        MarkersItem_static.lon = marker.get("lon").toString();
+                        MarkersItem_static.title = marker.get("title").toString();
+                        MarkersItem_static.category = marker.get("category").toString();
+                        MarkersItem_static.uploadTime = marker.get("uploadTime").toString();
+                        MarkersItem_static.school = marker.get("school").toString();
+                        MarkersItem_static.message = marker.get("message").toString();
+                        MarkersItem_static.timeLength = marker.get("timeLength").toString();
+                        MarkersItem_static.userid = marker.get("userid").toString();
+                        MarkersItem_static.imgUrl = marker.get("imgUrl").toString();
+                        MarkersItem_static.nickname = marker.get("nickname").toString();
+
+                        if( !MarkersItem_static.school.equals(filteredSchool1)  && !MarkersItem_static.school.equals(filteredSchool2) && !MarkersItem_static.school.equals(filteredSchool3)){
+                            Log.d("TAG","afterFilter 2.6  "+ MarkersItem_static.school+ "&&"+filteredSchool1+filteredSchool2+filteredSchool3 );
+                            continue;
+                        }
+                        Log.d("TAG","afterFilter 2.7");
+
+
+                        if(!MarkersItem_static.category.equals(filteredCategory1) && !MarkersItem_static.category.equals(filteredCategory2) && !MarkersItem_static.category.equals(filteredCategory3)
+                                &&!MarkersItem_static.category.equals(filteredCategory4)&& !MarkersItem_static.category.equals(filteredCategory5)&&!MarkersItem_static.category.equals(filteredCategory6)) {
+                            Log.d("TAG","afterFilter 2.8  "+ MarkersItem_static.category+ "&&"+filteredCategory1+filteredCategory2+filteredCategory3+ filteredCategory4+filteredCategory5+filteredCategory6);
+                            continue;
+                        }
+
+                        Log.d("TAG","afterFilter 2.9");
+
+                        LatLng markerLoc = new LatLng(Double.parseDouble(MarkersItem_static.lat),Double.parseDouble(MarkersItem_static.lon));
+
+
+                        Marker markers = gMap.addMarker(new MarkerOptions()
+                                .position(markerLoc)
+                                .title(MarkersItem_static.category)
+                                .snippet("["+ MarkersItem_static.uploadTime+"] "+ MarkersItem_static.title));
+                        markers.setTag(MarkersItem_static.userid);
+                        Log.d("TAG","afterFilter 333"+markers.getTag());
+
+                        gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(Marker marker) {
+                                Log.d("TAG","afterFilter 444"+markers.getTag()+"/"+marker.getTag());
+
+                                Intent intent = new Intent(getActivity(),WatchViewActivity.class);
+                                intent.putExtra("markerUserid",marker.getTag().toString());
+                                startActivity(intent);
+                            }
+                        });
+
+                    }
+                }
+            }
+        });
+    }
+
+    //제일처음 마커불러오기
+    public void drawMarkers(){
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Log.d("TAG","111");
         firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -327,33 +402,12 @@ public class Tab1_MapFragment extends Fragment implements
                                 startActivity(intent);
                             }
                         });
-                        // TODO: 2021-02-13 이제 나머지것들갖고오고,success안에서 바로 지도에 올려야 함.
+
                     }
                 }
             }
         });
-
-
-        String category = "파티 초대";
-        String msgtitle = "소주파티합니다";
-        String time = "2월10일 12시30분";
-
-
-//        MarkerOptions marker = new MarkerOptions();
-//        marker.title(category);
-//        marker.snippet(msgtitle);
-//        LatLng markerLoc = new LatLng(37.532680,127.024612);
-//        marker.position(markerLoc);
-//        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_marker);
-//        Bitmap b = bitmapdraw.getBitmap();
-//        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
-//        marker.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-//        gMap.addMarker(marker);
-
-        Log.d("gotit","end of on map ready");
     }
-
-
 
     @Override
     public void onCameraIdle() {
