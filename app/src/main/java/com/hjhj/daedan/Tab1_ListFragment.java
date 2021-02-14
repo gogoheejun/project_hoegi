@@ -1,12 +1,14 @@
 package com.hjhj.daedan;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -17,6 +19,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,14 +41,14 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //todo: 데이터에서 받아와야 함. 아이템 이미지url 스트링으로 뉴 해야(지금은 임시로 인트)
-        Log.d("markeritem", "list_onCreate");
+        Log.d("TAG", "list_onCreate");
         loadData();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d("markeritem", "list_onCreatView");
+        Log.d("TAG", "list_onCreatView");
         View view = inflater.inflate(R.layout.page_list_tab1,container,false);
         ImageView filter = view.findViewById(R.id.tab1MapPage_filter);
         filter.setOnClickListener(this);
@@ -52,7 +58,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("markeritem", "list_oncViewCreated");
+        Log.d("TAG", "list_oncViewCreated");
         recyclerView = view.findViewById(R.id.tab1ListPage_recycler);
 //        adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
 //        recyclerView.setAdapter(adapter);
@@ -62,86 +68,15 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("markeritem", "list_onResume");
-//
-//        adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
-//        recyclerView.setAdapter(adapter);
-    }
-
-    void loadData(){
-        Log.d("markeritem", "list_loadData");
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-
-                    for (QueryDocumentSnapshot document : task.getResult()){
-                        Map<String, Object> marker = document.getData();
-//                        MarkersItem markersItem = new MarkersItem();
-//
-//                        markersItem.lat = marker.get("lat").toString();
-//                        markersItem.lon = marker.get("lon").toString();
-//                        markersItem.title = marker.get("title").toString();
-//                        markersItem.category = marker.get("category").toString();
-//                        markersItem.uploadTime = marker.get("uploadTime").toString();
-//                        markersItem.school = marker.get("school").toString();
-//                        markersItem.message = marker.get("message").toString();
-//                        markersItem.timeLength = marker.get("timeLength").toString();
-//                        markersItem.userid = marker.get("userid").toString();
-//                        markersItem.imgUrl = marker.get("imgUrl").toString();
-//                        markersItem.nickname = marker.get("nickname").toString();
-
-                        items.add( new MarkersItem(marker.get("school").toString(),marker.get("nickname").toString(),marker.get("userid").toString(),marker.get("category").toString(),
-                                marker.get("uploadTime").toString(), marker.get("timeLength").toString(),marker.get("title").toString(),marker.get("message").toString(), marker.get("imgUrl").toString(),
-                                marker.get("lat").toString(), marker.get("lon").toString()));
-
-                        Log.d("markeritem", marker.get("school").toString());
-                        Log.d("markeritem", marker.get("nickname").toString());
-                        Log.d("markeritem",marker.get("userid").toString());
-                        Log.d("markeritem", marker.get("category").toString());
-                        Log.d("markeritem", marker.get("uploadTime").toString());
-                        Log.d("markeritem",  marker.get("timeLength").toString());
-
-                    }
-                    Log.d("markeritem",items.get(0).nickname+"\n"+items.get(1).nickname+"\n"+items.get(2).nickname);
-                    adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-        });
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo, "스터디 모집",
-//                "홍길동","한국외국어대학교","스터디모집해요","토익 스터디하고싶어요~ 토익만점가즈아~~~ 헬로 봉주르 니하오!","3일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-//                "아이린","서울시립대학교","파티모집해요","외국인 교환학생과 와인파티합니다 어서서오세요. 참가비 만원~ 기린포차로 오세요","1일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
-//                "수지","경희대학교","1축구할 사람!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"스터디 모집",
-//                "aaa","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
-//                "bbb","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"운동 모집",
-//                "ccc","경희대학교","2축구할 사람!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"스터디 모집",
-//                "가가가","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-//                "나나나","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-//                "다다다","경희대학교","3파티해요!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.loginactivity_logo,"파티 초대",
-//                "라라라","한국외국어대학교","스터디모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","3일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"파티 초대",
-//                "마마마","서울시립대학교","파티모집해요","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","1일 후 삭제 "));
-//        items.add(new Tab1_List_RecyclerItem(R.drawable.menu_bnv_my,"스터디 모집",
-//                "바바바","경희대학교","4스터디모집!!","내일 1시 학교 운동장에서 할거에요. 포지션 상관없이 한명 구해요. 끝나고 고기도 먹어요! 연락주세요","2시간 후 삭제 "));
+        Log.d("TAG", "list_onResume");
 
     }
-
-// TODO: 2021-02-14 이제 필터링해야함!! 
 
     CheckBox chb_school1, chb_school2, chb_school3, chb_schoolall;
     CheckBox chb_category1,chb_category2,chb_category3,chb_category4,chb_category5,chb_category6,chb_categoryall;
     Switch favSwtich;
+    String filteredSchool1, filteredSchool2,filteredSchool3;
+    String filteredCategory1,filteredCategory2,filteredCategory3,filteredCategory4,filteredCategory5,filteredCategory6;
     ArrayList<String> filters = new ArrayList<>();
     @Override
     public void onClick(View v) {
@@ -153,16 +88,70 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                 LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.dialog_filter_tab1,null);
 
                 chb_school1 = layout.findViewById(R.id.tab1_dialog_filter_kyunghee);
+                chb_school1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_schoolall.setChecked(false);
+                    }
+                });
                 chb_school2 = layout.findViewById(R.id.tab1_dialog_filter_uos);
+                chb_school2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_schoolall.setChecked(false);
+                    }
+                });
                 chb_school3 = layout.findViewById(R.id.tab1_dialog_filter_hufs);
+                chb_school3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_schoolall.setChecked(false);
+                    }
+                });
                 chb_schoolall =  layout.findViewById(R.id.tab1_dialog_filter_allschool);
 
                 chb_category1 = layout.findViewById(R.id.tab1_dialog_filter_category_club);
+                chb_category1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category2 = layout.findViewById(R.id.tab1_dialog_filter_category_meeting);
+                chb_category2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category3 = layout.findViewById(R.id.tab1_dialog_filter_category_study);
+                chb_category3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category4 = layout.findViewById(R.id.tab1_dialog_filter_category_sports);
+                chb_category4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category5 = layout.findViewById(R.id.tab1_dialog_filter_category_party);
+                chb_category5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category6 = layout.findViewById(R.id.tab1_dialog_filter_category_etc);
+                chb_category6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_categoryall = layout.findViewById(R.id.tab1_dialog_filter_category_all);
 
                 favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
@@ -174,13 +163,40 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        // TODO: db에서 하트 체크된것먼저 다 가져오기..굳이 여기서 할필요있나
+                        // TODO: 필터따라서 데이터 로드하기
 
+                        filteredSchool1= null; //처음 널로 해줘야지 다시 필터링 또할때 초기화되서 다시 비교해줌
+                        filteredSchool2 = null;
+                        filteredSchool3 = null;
+                        filteredCategory1 =null;
+                        filteredCategory2 =null;
+                        filteredCategory3 =null;
+                        filteredCategory4 =null;
+                        filteredCategory5 =null;
+                        filteredCategory6 =null;
                         //학교필터
-                       filter_school();
+                        if (chb_school1.isChecked() || chb_schoolall.isChecked()) filteredSchool1 = chb_school1.getText().toString();
+                        if (chb_school2.isChecked() || chb_schoolall.isChecked()) filteredSchool2 = chb_school2.getText().toString();
+                        if (chb_school3.isChecked() || chb_schoolall.isChecked()) filteredSchool3 = chb_school3.getText().toString();
+                        //테고리필터
+                        if (chb_category1.isChecked() || chb_categoryall.isChecked()) filteredCategory1 = chb_category1.getText().toString();
+                        if (chb_category2.isChecked() || chb_categoryall.isChecked()) filteredCategory2 = chb_category2.getText().toString();
+                        if (chb_category3.isChecked() || chb_categoryall.isChecked()) filteredCategory3 = chb_category3.getText().toString();
+                        if (chb_category4.isChecked() || chb_categoryall.isChecked()) filteredCategory4 = chb_category4.getText().toString();
+                        if (chb_category5.isChecked() || chb_categoryall.isChecked()) filteredCategory5 = chb_category5.getText().toString();
+                        if (chb_category6.isChecked() || chb_categoryall.isChecked()) filteredCategory6 = chb_category6.getText().toString();
 
-                       //테고리필터
-                        filter_category();
+//                        gMap.clear(); 이거 대신 리사이클러뷰 다 클리어시켜야 함
+                        items.clear();
+                        loadDataWithFilters();
+
+
+
+//                        //학교필터
+//                       filter_school();
+//
+//                       //테고리필터
+//                        filter_category();
 
 
                     }
@@ -194,7 +210,84 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
 
                 break;
         }
-    }//onclick();
+    }//onclick();필터링버튼..
+
+    public void loadDataWithFilters(){
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document: task.getResult()){
+                        Map<String,Object>  marker= document.getData();
+
+                        MarkersItem_static.lat = marker.get("lat").toString();
+                        MarkersItem_static.lon = marker.get("lon").toString();
+                        MarkersItem_static.title = marker.get("title").toString();
+                        MarkersItem_static.category = marker.get("category").toString();
+                        MarkersItem_static.uploadTime = marker.get("uploadTime").toString();
+                        MarkersItem_static.school = marker.get("school").toString();
+                        MarkersItem_static.message = marker.get("message").toString();
+                        MarkersItem_static.timeLength = marker.get("timeLength").toString();
+                        MarkersItem_static.userid = marker.get("userid").toString();
+                        MarkersItem_static.imgUrl = marker.get("imgUrl").toString();
+                        MarkersItem_static.nickname = marker.get("nickname").toString();
+
+
+                        if( !MarkersItem_static.school.equals(filteredSchool1)  && !MarkersItem_static.school.equals(filteredSchool2) && !MarkersItem_static.school.equals(filteredSchool3)){
+//                            Log.d("TAG","##List##111 afterFilter "+ MarkersItem_static.school+ "&&"+filteredSchool1+filteredSchool2+filteredSchool3 );
+                            continue;
+                        }
+//                        Log.d("TAG","##List##100??? ");
+//                        Log.d("TAG","##List##100 afterFilter "+ MarkersItem_static.school+ "&&"+filteredSchool1+filteredSchool2+filteredSchool3 );
+
+                        if(!MarkersItem_static.category.equals(filteredCategory1) && !MarkersItem_static.category.equals(filteredCategory2) && !MarkersItem_static.category.equals(filteredCategory3)
+                                &&!MarkersItem_static.category.equals(filteredCategory4)&& !MarkersItem_static.category.equals(filteredCategory5)&&!MarkersItem_static.category.equals(filteredCategory6)) {
+                            Log.d("TAG","afterFilter 2.8  "+ MarkersItem_static.category+ "&&"+filteredCategory1+filteredCategory2+filteredCategory3+ filteredCategory4+filteredCategory5+filteredCategory6);
+                            continue;
+                        }
+                        items.add( new MarkersItem(marker.get("school").toString(),marker.get("nickname").toString(),marker.get("userid").toString(),marker.get("category").toString(),
+                                marker.get("uploadTime").toString(), marker.get("timeLength").toString(),marker.get("title").toString(),marker.get("message").toString(), marker.get("imgUrl").toString(),
+                                marker.get("lat").toString(), marker.get("lon").toString()));
+//                        Log.d("TAG","##List##222 afterFilter "+ items.get(0).nickname );
+
+                    }
+
+                    adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+        });
+    }
+
+    //db에서 데이터 가져오기....onCreate에서 쓰임
+    void loadData(){
+        Log.d("markeritem", "list_loadData");
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    //일부러 MarkersItem을 MarkersItem_static이랑 따로만듦. 스태틱으로만 하면 item안에 있는 요소들 다 똑같아짐
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        Map<String, Object> marker = document.getData();
+
+                        items.add( new MarkersItem(marker.get("school").toString(),marker.get("nickname").toString(),marker.get("userid").toString(),marker.get("category").toString(),
+                                marker.get("uploadTime").toString(), marker.get("timeLength").toString(),marker.get("title").toString(),marker.get("message").toString(), marker.get("imgUrl").toString(),
+                                marker.get("lat").toString(), marker.get("lon").toString()));
+
+
+                    }
+                    Log.d("markeritem",items.get(0).nickname+"\n"+items.get(1).nickname+"\n"+items.get(2).nickname);
+
+                    //리사이클러뷰에 어댑터랑 items를 결합!...원래는 onViewCreated에서 했었는데 여기선 데이터를 다 받아온 다음에 해야하니까
+//                    여기서 함
+                    adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+        });
+    }
 
     void filter_school(){
         if(chb_school1.isChecked()) filters.add(chb_school1.getText().toString());

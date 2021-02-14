@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -162,18 +163,72 @@ public class Tab1_MapFragment extends Fragment implements
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflater = LayoutInflater.from(view.getContext());
                 LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.dialog_filter_tab1,null);
-
+                //체크박스 카테고리로 필터링할 목록 고르기
                 chb_school1 = layout.findViewById(R.id.tab1_dialog_filter_kyunghee);
+                chb_school1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_schoolall.setChecked(false);
+                    }
+                });
                 chb_school2 = layout.findViewById(R.id.tab1_dialog_filter_uos);
+                chb_school2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_schoolall.setChecked(false);
+                    }
+                });
                 chb_school3 = layout.findViewById(R.id.tab1_dialog_filter_hufs);
+                chb_school3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_schoolall.setChecked(false);
+                    }
+                });
                 chb_schoolall =  layout.findViewById(R.id.tab1_dialog_filter_allschool);
 
                 chb_category1 = layout.findViewById(R.id.tab1_dialog_filter_category_club);
+                chb_category1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category2 = layout.findViewById(R.id.tab1_dialog_filter_category_meeting);
+                chb_category2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category3 = layout.findViewById(R.id.tab1_dialog_filter_category_study);
+                chb_category3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category4 = layout.findViewById(R.id.tab1_dialog_filter_category_sports);
+                chb_category4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category5 = layout.findViewById(R.id.tab1_dialog_filter_category_party);
+                chb_category5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_category6 = layout.findViewById(R.id.tab1_dialog_filter_category_etc);
+                chb_category6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) chb_categoryall.setChecked(false);
+                    }
+                });
                 chb_categoryall = layout.findViewById(R.id.tab1_dialog_filter_category_all);
 
                 favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
@@ -187,7 +242,7 @@ public class Tab1_MapFragment extends Fragment implements
 
                         // TODO: db에서 하트 체크된것먼저 다 가져오기..굳이 여기서 할필요있나
 
-                        filteredSchool1= null;
+                        filteredSchool1= null; //처음 널로 해줘야지 다시 필터링 또할때 초기화되서 다시 비교해줌
                         filteredSchool2 = null;
                         filteredSchool3 = null;
                         filteredCategory1 =null;
@@ -291,7 +346,7 @@ public class Tab1_MapFragment extends Fragment implements
         Log.d("gotit","end of on map ready");
     }
 
-    //필터조건 반영한 마커불러오기
+    //필터조건 반영한 마커불러오기--필터 다이얼로그의 설정누를때 쓰임
     public void drawMarkersWithFilters(){
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Log.d("TAG","afterFilter 111");
@@ -358,7 +413,7 @@ public class Tab1_MapFragment extends Fragment implements
         });
     }
 
-    //제일처음 마커불러오기
+    //제일처음 마커불러오기--onMapready()에서 처음 한번만 쓰임
     public void drawMarkers(){
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Log.d("TAG","111");

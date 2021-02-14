@@ -145,6 +145,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                             writeimgUrl = uri.toString();  //이제 이 writeimgUrl을 db에 다른 정보랑 같이 한방에 저장
 //                            Toast.makeText(Tab1_Map_WriteActivity.this, "write이미지 firestorage에 저장완료\n"+writeimgUrl, Toast.LENGTH_SHORT).show();
 
+                            Log.d("TAG", "write 111");
 
                             //업로드!
                             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -157,6 +158,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot documentSnapshot = task.getResult();
                                         nickname = documentSnapshot.getString("nickname");
+                                        Log.d("TAG", "write 222");
 
 
                                         MarkersItem_static item = new MarkersItem_static(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
@@ -171,8 +173,9 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                     });
                 }
             });
-        } else {
+        } else {//이미지가 없다면
             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            Log.d("TAG", "write 333");
 
             //닉네임가져옴
             DocumentReference docref = firestore.collection("users").document(userid);
@@ -182,7 +185,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         if (documentSnapshot.exists()) {
-                            Log.d("TAG", "exists!" + documentSnapshot.getString("nickname"));
+                            Log.d("TAG", "444!" + documentSnapshot.getString("nickname"));
                             //닉네임을 가져온거 성공하면, 파이어스토어에 업로드!!
                             nickname = documentSnapshot.getString("nickname");
                             item = new MarkersItem_static(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
