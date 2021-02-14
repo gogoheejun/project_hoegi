@@ -220,7 +220,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document: task.getResult()){
                         Map<String,Object>  marker= document.getData();
-
+                    Log.d("TAg","tab1 list loadDAta with filters");
                         MarkersItem_static.lat = marker.get("lat").toString();
                         MarkersItem_static.lon = marker.get("lon").toString();
                         MarkersItem_static.title = marker.get("title").toString();
@@ -262,7 +262,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
 
     //db에서 데이터 가져오기....onCreate에서 쓰임
     void loadData(){
-        Log.d("markeritem", "list_loadData");
+        Log.d("TAG", "list_loadData");
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

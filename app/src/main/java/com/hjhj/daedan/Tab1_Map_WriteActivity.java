@@ -54,7 +54,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
     String writeimgUrl, userEmail;
     double lat, lon;
     FirebaseUser user;
-    MarkersItem_static item;
+    MarkersItem item;
 
 
     @Override
@@ -161,7 +161,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                                         Log.d("TAG", "write 222");
 
 
-                                        MarkersItem_static item = new MarkersItem_static(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
+                                        MarkersItem item = new MarkersItem(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
 
                                         uploadToFirestore(firestore, item);
 
@@ -188,7 +188,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                             Log.d("TAG", "444!" + documentSnapshot.getString("nickname"));
                             //닉네임을 가져온거 성공하면, 파이어스토어에 업로드!!
                             nickname = documentSnapshot.getString("nickname");
-                            item = new MarkersItem_static(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
+                            item = new MarkersItem(schoolname, nickname, userid, string_category, uploadtime, string_timeLength, title, msg, "noImage", lat + "", lon + "");
 
                             uploadToFirestore(firestore, item);
 
@@ -203,7 +203,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadToFirestore(FirebaseFirestore firestore, MarkersItem_static item) {
+    public void uploadToFirestore(FirebaseFirestore firestore, MarkersItem item) {
         firestore.collection("markers").document(userid).set(item)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

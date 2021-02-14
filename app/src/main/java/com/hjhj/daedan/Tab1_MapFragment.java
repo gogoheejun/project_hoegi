@@ -416,13 +416,13 @@ public class Tab1_MapFragment extends Fragment implements
     //제일처음 마커불러오기--onMapready()에서 처음 한번만 쓰임
     public void drawMarkers(){
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Log.d("TAG","111");
+        Log.d("TAG","tab1 map 111");
         firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 markers = new MarkerOptions();
                 if(task.isSuccessful()){
-                    Log.d("TAG","222");
+                    Log.d("TAG","tab1 map 222");
                     for (QueryDocumentSnapshot document : task.getResult()){
                         Map<String, Object> marker = document.getData();
                         MarkersItem_static.lat = marker.get("lat").toString();
@@ -445,7 +445,7 @@ public class Tab1_MapFragment extends Fragment implements
                                 .title(MarkersItem_static.category)
                                 .snippet("["+ MarkersItem_static.uploadTime+"] "+ MarkersItem_static.title));
                         markers.setTag(MarkersItem_static.userid);
-                        Log.d("TAG","333"+markers.getTag());
+                        Log.d("TAG","tab1 map 333"+markers.getTag());
 
                         gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                             @Override
