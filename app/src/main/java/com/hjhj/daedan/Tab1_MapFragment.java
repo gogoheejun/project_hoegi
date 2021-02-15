@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,14 +112,14 @@ public class Tab1_MapFragment extends Fragment implements
     }
 
 
-
+    View view;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d("gotit","onCreatView start");
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        View view = inflater.inflate(R.layout.page_map_tab1, container, false);
+        view = inflater.inflate(R.layout.page_map_tab1, container, false);
 
         tv_temperature = view.findViewById(R.id.page_map_tv_temperature);
         iv_weather = view.findViewById(R.id.page_map_iv_weather);
@@ -126,15 +127,10 @@ public class Tab1_MapFragment extends Fragment implements
         iv_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                if (Build.VERSION.SDK_INT >= 26) {
-//                    transaction.setReorderingAllowed(false);
-//                }
-//                transaction.detach(Tab1_MapFragment.this).attach(Tab1_MapFragment.this).commit();
+                //refresh..
                 gMap.clear();
                 drawMarkers();
-                view.findViewById(R.id.mappage_mapview).invalidate();
+//                view.findViewById(R.id.mappage_mapview).invalidate();
 
                 Animation ani= AnimationUtils.loadAnimation(getActivity(), R.anim.appear_logo);
                 v.startAnimation(ani);
@@ -308,7 +304,10 @@ public class Tab1_MapFragment extends Fragment implements
                 Bundle extra = new Bundle();
                 intent.putExtra("lat", bluedotLat); //
                 intent.putExtra("lon", bluedotLon);
-                startActivity(intent, extra);
+//                startActivity(intent, extra);
+
+                //글쓰고 돌아오면 refresh하려고 리저트로 인텐트보냄
+                startActivityForResult(intent,11,extra);
 
             }
         });
@@ -321,12 +320,7 @@ public class Tab1_MapFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//        Animation ani= AnimationUtils.loadAnimation(getActivity(), R.anim.appear_logo);
-//        iv_reload.startAnimation(ani);
-        Log.d("gotit","onresume start");
+
     }
 
     String markerTitle, markerCategory, markerUploadtime, markerSchool;
@@ -341,8 +335,12 @@ public class Tab1_MapFragment extends Fragment implements
             return;
         }
         UiSettings settings = gMap.getUiSettings();
+
         settings.setMyLocationButtonEnabled(true);
         gMap.setMyLocationEnabled(true);
+
+        View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+
 
         //----------지도준비됨
 
@@ -428,6 +426,8 @@ public class Tab1_MapFragment extends Fragment implements
                                 Intent intent = new Intent(getActivity(),WatchViewActivity.class);
                                 intent.putExtra("markerUserid",marker.getTag().toString());
                                 startActivity(intent);
+
+
                             }
                         });
 
@@ -435,6 +435,27 @@ public class Tab1_MapFragment extends Fragment implements
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==11){
+            Log.d("gotit", "인텐트 result돌아옴");
+            if(resultCode == getActivity().RESULT_OK){
+                // TODO: 2021-02-15 자동 리프레시하고싶다고
+                Log.d("gotit", "인텐트 resltOK");
+
+                gMap.clear();
+                drawMarkers();
+                Log.d("gotit", "인텐트 새로고침완료");
+
+//                view.findViewById(R.id.mappage_mapview).invalidate();
+
+                Animation ani= AnimationUtils.loadAnimation(getActivity(), R.anim.appear_logo);
+                iv_reload.startAnimation(ani);
+            }
+        }
     }
 
     //제일처음 마커불러오기--onMapready()에서 처음 한번만 쓰임
@@ -787,8 +808,9 @@ public class Tab1_MapFragment extends Fragment implements
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        locationManager.removeUpdates(locationListener);
-        Log.d("gotit", "locationManager stopped");
+//
+//        locationManager.removeUpdates(locationListener);
+//        Log.d("gotit", "locationManager stopped");
 
     }
 }

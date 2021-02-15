@@ -11,10 +11,19 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
     <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="#8FFFFFFF"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentRight="true" />
+    <ImageView
         android:id="@+id/page_map_iv_reload"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_margin="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentRight="true"
         android:src="@drawable/icon_reload"/>
 
    <RelativeLayout

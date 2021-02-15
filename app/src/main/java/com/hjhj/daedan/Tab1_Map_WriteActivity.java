@@ -57,6 +57,8 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
     FirebaseUser user;
     MarkersItem item;
 
+    Intent intent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +110,8 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
         }
 
 
-        Intent intent = getIntent();
+        intent = getIntent();
+
         lat = intent.getDoubleExtra("lat", 0);
         lon = intent.getDoubleExtra("lon", 0);
 
@@ -213,6 +216,11 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                         Toast.makeText(Tab1_Map_WriteActivity.this, "게시글 업로드 성공", Toast.LENGTH_SHORT).show();
                         Log.d("TAG", "성공");
 
+                        //map으로 돌아가면 리프레시하도록...거기서 forResult로 인텐트보냈으니 여기서 다시 돌려보냄
+                        intent.putExtra("refresh","startRefresh");
+                        Log.d("gotit", "인텐트putextra");
+                        setResult(RESULT_OK,intent);
+                        Log.d("gotit", "인텐트 setReslt");
                         finish();
                     }
                 })
