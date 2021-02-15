@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,6 +37,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
     ArrayList<MarkersItem> items = new ArrayList<MarkersItem>();
     RecyclerView recyclerView;
     Tab1_List_RecyclerAdapter adapter;
+    SwipeRefreshLayout refreshLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,15 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
         super.onViewCreated(view, savedInstanceState);
         Log.d("TAG", "list_oncViewCreated");
         recyclerView = view.findViewById(R.id.tab1ListPage_recycler);
+        refreshLayout= view.findViewById(R.id.layout_refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                items.clear();
+                loadData();
+                refreshLayout.setRefreshing(false);
+            }
+        });
 //        adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
 //        recyclerView.setAdapter(adapter);
 

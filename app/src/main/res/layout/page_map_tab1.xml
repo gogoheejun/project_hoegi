@@ -10,6 +10,13 @@
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
+    <ImageView
+        android:id="@+id/page_map_iv_reload"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="4dp"
+        android:src="@drawable/icon_reload"/>
+
    <RelativeLayout
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"

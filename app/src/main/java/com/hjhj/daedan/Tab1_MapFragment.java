@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -76,7 +79,7 @@ public class Tab1_MapFragment extends Fragment implements
     MapView mapView;
 
     TextView tv_temperature;
-    ImageView iv_weather;
+    ImageView iv_weather, iv_reload;
     String weather, temperature;
     String date, time;
     String server;
@@ -119,6 +122,24 @@ public class Tab1_MapFragment extends Fragment implements
 
         tv_temperature = view.findViewById(R.id.page_map_tv_temperature);
         iv_weather = view.findViewById(R.id.page_map_iv_weather);
+        iv_reload = view.findViewById(R.id.page_map_iv_reload);
+        iv_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//                if (Build.VERSION.SDK_INT >= 26) {
+//                    transaction.setReorderingAllowed(false);
+//                }
+//                transaction.detach(Tab1_MapFragment.this).attach(Tab1_MapFragment.this).commit();
+                gMap.clear();
+                drawMarkers();
+                view.findViewById(R.id.mappage_mapview).invalidate();
+
+                Animation ani= AnimationUtils.loadAnimation(getActivity(), R.anim.appear_logo);
+                v.startAnimation(ani);
+            }
+        });
 
         getTime();
         getInfoAndShow();
@@ -303,6 +324,8 @@ public class Tab1_MapFragment extends Fragment implements
 //        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            return;
 //        }
+//        Animation ani= AnimationUtils.loadAnimation(getActivity(), R.anim.appear_logo);
+//        iv_reload.startAnimation(ani);
         Log.d("gotit","onresume start");
     }
 
@@ -345,6 +368,7 @@ public class Tab1_MapFragment extends Fragment implements
         drawMarkers();
         Log.d("gotit","end of on map ready");
     }
+    MarkersItem markeritem = new MarkersItem();
 
     //필터조건 반영한 마커불러오기--필터 다이얼로그의 설정누를때 쓰임
     public void drawMarkersWithFilters(){
@@ -359,41 +383,41 @@ public class Tab1_MapFragment extends Fragment implements
                     for (QueryDocumentSnapshot document : task.getResult()){
                         Log.d("TAG","afterFilter 2.5");
                         Map<String, Object> marker = document.getData();
-                        MarkersItem_static.lat = marker.get("lat").toString();
-                        MarkersItem_static.lon = marker.get("lon").toString();
-                        MarkersItem_static.title = marker.get("title").toString();
-                        MarkersItem_static.category = marker.get("category").toString();
-                        MarkersItem_static.uploadTime = marker.get("uploadTime").toString();
-                        MarkersItem_static.school = marker.get("school").toString();
-                        MarkersItem_static.message = marker.get("message").toString();
-                        MarkersItem_static.timeLength = marker.get("timeLength").toString();
-                        MarkersItem_static.userid = marker.get("userid").toString();
-                        MarkersItem_static.imgUrl = marker.get("imgUrl").toString();
-                        MarkersItem_static.nickname = marker.get("nickname").toString();
+                        markeritem.lat = marker.get("lat").toString();
+                        markeritem.lon = marker.get("lon").toString();
+                        markeritem.title = marker.get("title").toString();
+                        markeritem.category = marker.get("category").toString();
+                        markeritem.uploadTime = marker.get("uploadTime").toString();
+                        markeritem.school = marker.get("school").toString();
+                        markeritem.message = marker.get("message").toString();
+                        markeritem.timeLength = marker.get("timeLength").toString();
+                        markeritem.userid = marker.get("userid").toString();
+                        markeritem.imgUrl = marker.get("imgUrl").toString();
+                        markeritem.nickname = marker.get("nickname").toString();
 
-                        if( !MarkersItem_static.school.equals(filteredSchool1)  && !MarkersItem_static.school.equals(filteredSchool2) && !MarkersItem_static.school.equals(filteredSchool3)){
-                            Log.d("TAG","afterFilter 2.6  "+ MarkersItem_static.school+ "&&"+filteredSchool1+filteredSchool2+filteredSchool3 );
+                        if( !markeritem.school.equals(filteredSchool1)  && !markeritem.school.equals(filteredSchool2) && !markeritem.school.equals(filteredSchool3)){
+                            Log.d("TAG","afterFilter 2.6  "+ markeritem.school+ "&&"+filteredSchool1+filteredSchool2+filteredSchool3 );
                             continue;
                         }
                         Log.d("TAG","afterFilter 2.7");
 
 
-                        if(!MarkersItem_static.category.equals(filteredCategory1) && !MarkersItem_static.category.equals(filteredCategory2) && !MarkersItem_static.category.equals(filteredCategory3)
-                                &&!MarkersItem_static.category.equals(filteredCategory4)&& !MarkersItem_static.category.equals(filteredCategory5)&&!MarkersItem_static.category.equals(filteredCategory6)) {
-                            Log.d("TAG","afterFilter 2.8  "+ MarkersItem_static.category+ "&&"+filteredCategory1+filteredCategory2+filteredCategory3+ filteredCategory4+filteredCategory5+filteredCategory6);
+                        if(!markeritem.category.equals(filteredCategory1) && !markeritem.category.equals(filteredCategory2) && !markeritem.category.equals(filteredCategory3)
+                                &&!markeritem.category.equals(filteredCategory4)&& !markeritem.category.equals(filteredCategory5)&&!markeritem.category.equals(filteredCategory6)) {
+                            Log.d("TAG","afterFilter 2.8  "+ markeritem.category+ "&&"+filteredCategory1+filteredCategory2+filteredCategory3+ filteredCategory4+filteredCategory5+filteredCategory6);
                             continue;
                         }
 
                         Log.d("TAG","afterFilter 2.9");
 
-                        LatLng markerLoc = new LatLng(Double.parseDouble(MarkersItem_static.lat),Double.parseDouble(MarkersItem_static.lon));
+                        LatLng markerLoc = new LatLng(Double.parseDouble(markeritem.lat),Double.parseDouble(markeritem.lon));
 
 
                         Marker markers = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
-                                .title(MarkersItem_static.category)
-                                .snippet("["+ MarkersItem_static.uploadTime+"] "+ MarkersItem_static.title));
-                        markers.setTag(MarkersItem_static.userid);
+                                .title(markeritem.category)
+                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title));
+                        markers.setTag(markeritem.userid);
                         Log.d("TAG","afterFilter 333"+markers.getTag());
 
                         gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -425,26 +449,26 @@ public class Tab1_MapFragment extends Fragment implements
                     Log.d("TAG","tab1 map 222");
                     for (QueryDocumentSnapshot document : task.getResult()){
                         Map<String, Object> marker = document.getData();
-                        MarkersItem_static.lat = marker.get("lat").toString();
-                        MarkersItem_static.lon = marker.get("lon").toString();
-                        MarkersItem_static.title = marker.get("title").toString();
-                        MarkersItem_static.category = marker.get("category").toString();
-                        MarkersItem_static.uploadTime = marker.get("uploadTime").toString();
-                        MarkersItem_static.school = marker.get("school").toString();
-                        MarkersItem_static.message = marker.get("message").toString();
-                        MarkersItem_static.timeLength = marker.get("timeLength").toString();
-                        MarkersItem_static.userid = marker.get("userid").toString();
-                        MarkersItem_static.imgUrl = marker.get("imgUrl").toString();
-                        MarkersItem_static.nickname = marker.get("nickname").toString();
+                        markeritem.lat = marker.get("lat").toString();
+                        markeritem.lon = marker.get("lon").toString();
+                        markeritem.title = marker.get("title").toString();
+                        markeritem.category = marker.get("category").toString();
+                        markeritem.uploadTime = marker.get("uploadTime").toString();
+                        markeritem.school = marker.get("school").toString();
+                        markeritem.message = marker.get("message").toString();
+                        markeritem.timeLength = marker.get("timeLength").toString();
+                        markeritem.userid = marker.get("userid").toString();
+                        markeritem.imgUrl = marker.get("imgUrl").toString();
+                        markeritem.nickname = marker.get("nickname").toString();
 
-                        LatLng markerLoc = new LatLng(Double.parseDouble(MarkersItem_static.lat),Double.parseDouble(MarkersItem_static.lon));
+                        LatLng markerLoc = new LatLng(Double.parseDouble(markeritem.lat),Double.parseDouble(markeritem.lon));
 
 
                         Marker markers = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
-                                .title(MarkersItem_static.category)
-                                .snippet("["+ MarkersItem_static.uploadTime+"] "+ MarkersItem_static.title));
-                        markers.setTag(MarkersItem_static.userid);
+                                .title(markeritem.category)
+                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title));
+                        markers.setTag(markeritem.userid);
                         Log.d("TAG","tab1 map 333"+markers.getTag());
 
                         gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {

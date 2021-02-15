@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -117,8 +118,8 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
         btsCategory();
         btsTimeLength();
         chooseImage();
-
     }
+
 
     public void click_writeOk(View view) {
 //        nickname;userid;category;uploadTime;timeLength;title;message;imgUrl;lat;lon;
@@ -192,6 +193,7 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
 
                             uploadToFirestore(firestore, item);
 
+
                         } else {
                             Log.d("TAG", "no such docs");
                         }
@@ -221,6 +223,8 @@ public class Tab1_Map_WriteActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 
 
     public void chooseImage() {

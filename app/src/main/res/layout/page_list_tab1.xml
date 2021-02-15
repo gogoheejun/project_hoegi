@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_refresh">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tab1ListPage_recycler"
@@ -15,6 +20,7 @@
         android:orientation="vertical"
         android:padding="8dp"
         />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/tab1MapPage_filter"
@@ -26,3 +32,4 @@
         android:src="@drawable/icon_filter"
         android:clickable="true"/>
 </RelativeLayout>
+
