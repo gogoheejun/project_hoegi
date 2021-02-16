@@ -48,98 +48,58 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:animateLayoutChanges="true"
-            android:layout_marginBottom="?attr/actionBarSize">
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_hello"
-                android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ChatActivity">
+            <ListView
+                android:id="@+id/chatActivity_listview"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="16dp"
-                android:text="HELLO!!"
-                android:textColor="#000000"
-                android:textSize="70dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_weight="1"
+                android:divider="@color/white"
+                android:dividerHeight="0dp"
+                android:transcriptMode="alwaysScroll"
+                android:background="@color/green4"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_hello2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="16dp"
-                android:text="HELLO2!!"
-                android:textColor="#000000"
-                android:textSize="70dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_hello" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_hello3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="16dp"
-                android:text="HELLO3!!"
-                android:textColor="#000000"
-                android:textSize="70dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_hello2" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_hello4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="16dp"
-                android:text="HELLO4!!"
-                android:textColor="#000000"
-                android:textSize="70dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_hello3" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_hello5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="16dp"
-                android:text="HELLO5!!"
-                android:textColor="#000000"
-                android:textSize="70dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_hello4" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_hello6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="16dp"
-                android:text="HELLO6!!"
-                android:textColor="#000000"
-                android:textSize="70dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_hello5" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:background="@color/green2"
+        android:layout_gravity="bottom">
+
+        <EditText
+            android:id="@+id/chatActivity_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/loginactivity_et_box"
+            android:padding="8dp"
+            android:inputType="textMultiLine"
+            android:maxLines="4"/>
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:background="@drawable/icon_send"
+            android:layout_marginLeft="8dp"
+            android:onClick="clickSend"/>
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_optionmap"
         app:maxImageSize="36dp"
-        android:layout_margin="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="56dp"
         android:scaleType="center"
         app:tint ="@null"
         app:elevation="6dp"
