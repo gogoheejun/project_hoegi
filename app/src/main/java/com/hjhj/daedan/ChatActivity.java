@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+
 public class ChatActivity extends AppCompatActivity {
 
     @Override
@@ -14,15 +17,25 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Toolbar toolbar = findViewById(R.id.chatActivity_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(null);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.option,menu);
-        return super.onCreateOptionsMenu(menu);
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingtoolbarlayout);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if(scrollRange ==-1){
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if(scrollRange+verticalOffset ==0){
+                    collapsingToolbarLayout.setTitle("this is title");
+                    isShow = true;
+                }else if(isShow){
+                    collapsingToolbarLayout.setTitle(" ");
+                    isShow = false;
+                }
+            }
+        });
     }
 
     public void clickSend(View view) {

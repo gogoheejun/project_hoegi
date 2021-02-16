@@ -1,106 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_height="?attr/actionBarSize"
-    android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:backgroundTint="@color/white"
+        app:expanded="false">
 
-            app:contentScrim="#FF6B60"
-            app:expandedTitleGravity="center"
-            android:fitsSystemWindows="true">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingtoolbarlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+            <fragment
+                android:name="com.hjhj.daedan.CollapseViewFragment"
+                android:id="@+id/fooFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="pin" />
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/chatActivity_toolbar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                style="@style/ToolbarStyle">
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="aaa"
-                    android:textSize="20sp"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center"
-                    app:layout_collapseMode="pin"/>
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
             </androidx.appcompat.widget.Toolbar>
 
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--원래는 이거만 있었음..-->
-<!--    <androidx.appcompat.widget.Toolbar-->
-<!--        android:id="@+id/chatActivity_toolbar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="?attr/actionBarSize"-->
-<!--        style="@style/ToolbarStyle">-->
-<!--        <TextView-->
-<!--            android:id="@+id/toolbar_title"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="aaa"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:layout_gravity="center"/>-->
-<!--    </androidx.appcompat.widget.Toolbar>-->
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ChatActivity">
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ListView
-            android:id="@+id/chatActivity_listview"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:divider="@color/white"
-            android:dividerHeight="0dp"
-            android:transcriptMode="alwaysScroll"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="4dp"
-            android:background="@color/green2">
+            android:layout_height="0dp"
+            android:animateLayoutChanges="true"
+            android:layout_marginBottom="?attr/actionBarSize">
 
-            <EditText
-                android:id="@+id/chatActivity_et"
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_hello"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/loginactivity_et_box"
-                android:padding="8dp"
-                android:inputType="textMultiLine"
-                android:maxLines="4"/>
-            <ImageButton
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:background="@drawable/icon_send"
-                android:layout_marginLeft="8dp"
-                android:onClick="clickSend"/>
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="16dp"
+                android:text="HELLO!!"
+                android:textColor="#000000"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_hello2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="16dp"
+                android:text="HELLO2!!"
+                android:textColor="#000000"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_hello" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_hello3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="16dp"
+                android:text="HELLO3!!"
+                android:textColor="#000000"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_hello2" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_hello4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="16dp"
+                android:text="HELLO4!!"
+                android:textColor="#000000"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_hello3" />
 
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_hello5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="16dp"
+                android:text="HELLO5!!"
+                android:textColor="#000000"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_hello4" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_hello6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="16dp"
+                android:text="HELLO6!!"
+                android:textColor="#000000"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_hello5" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_optionmap"
+        app:maxImageSize="36dp"
+        android:layout_margin="16dp"
+        android:scaleType="center"
+        app:tint ="@null"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end"
+        />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-
-
