@@ -71,6 +71,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                 refreshLayout.setRefreshing(false);
             }
         });
+        //원래는 여기에
 //        adapter = new Tab1_List_RecyclerAdapter(getActivity(),items);
 //        recyclerView.setAdapter(adapter);
 

@@ -21,27 +21,20 @@
         <item name="android:background">@drawable/bg_bottomsheetshape</item>
     </style>
 
+
+    <style name="ToolbarStyle">
+        <item name="android:background">@color/green2</item><!--네임스페이스가 android면 버전영향 안받는애들임,,,
+        아래에 titleTextColor는 버전 21이상부터만 가능함...우리 미니멈이 19잖어 그런건 app:임(원래 activty_main)에 app:titleTextColor라고 해주는거를 여기 테마에다가 써주는거임-->
+        <item name="titleTextColor">@color/white</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="background">@color/green3</item>
+        <item name="colorControlNormal">@color/green3</item>
+    </style>
+
 <!-- =============-->
 
 
-
-
-    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerFamily">cut</item>
-        <item name="cornerSize">4dp</item>
-    </style>
-
-    <style name="Widget.App.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.FloatingActionButton</item>
-        <item name="shapeAppearanceOverlay">
-            @style/ShapeAppearance.App.SmallComponent
-        </item>
-    </style>
-
-    <style name="ThemeOverlay.App.FloatingActionButton" parent="">
-        <item name="colorSecondary">@color/green1</item>
-        <item name="colorOnSecondary">@color/green2</item>
-        <item name="colorOnSurface">@color/green3</item>
-    </style>
 
 </resources>

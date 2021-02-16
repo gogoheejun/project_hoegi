@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_gotoWatchView"
+        android:title="작성글 보기"
+        android:icon="@drawable/icon_optionwatch"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/menu_gotoMap"
+        android:title="on map"
+        android:icon="@drawable/icon_optionmap"
+        app:showAsAction="always"/>
+</menu>
