@@ -163,7 +163,7 @@ public class Tab1_MapFragment extends Fragment implements
 
 
                 LatLng latLng = new LatLng(bluedotLat, bluedotLon);
-                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15 ));
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,12 ));
             }
         };
 

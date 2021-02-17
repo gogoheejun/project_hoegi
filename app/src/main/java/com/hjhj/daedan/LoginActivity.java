@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
     EditText et_email;
@@ -65,6 +68,11 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
                                         FirebaseUser user = mAuth.getCurrentUser();
+
+                                        //user정보를 GUser에 담기
+                                        intoGUser(user.getUid());
+
+
                                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
                                         
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -81,6 +89,33 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "이메일 또는 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
                 
+            }
+        });
+    }
+    public void intoGUser(String userId){
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                   GUser.nickname = documentSnapshot.getString("nickname");
+                   GUser.userId = documentSnapshot.getString("userid");
+                   String email = documentSnapshot.getString("userid");
+                   String domain = email.substring(email.indexOf("@")+1);
+                   switch (domain){
+                       case "hufs.ac.kr":
+                           GUser.school = "한국외국어대학교";
+                           break;
+                       case "uos.ac.kr":
+                           GUser.school = "서울시립대학교";
+                           break;
+                       case "khu.ac.kr":
+                           GUser.school = "경희대학교";
+                           break;
+                   }
+                   GUser.profileUrl = documentSnapshot.getString("profile");
+                }
             }
         });
     }
