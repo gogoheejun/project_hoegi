@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -40,6 +41,7 @@ public class ChatAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         MessageItem item = messageItems.get(position);
         View itemView = null;
         LayoutInflater inflater = LayoutInflater.from(context);

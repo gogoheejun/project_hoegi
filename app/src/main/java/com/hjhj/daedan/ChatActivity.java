@@ -29,7 +29,10 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -79,7 +82,7 @@ public class ChatActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.chatActivity_listview);
         chatAdapter = new ChatAdapter(this, messageItems);
-        listView.setAdapter(chatAdapter);
+
 
 
         //-----------------아래부터 내용관련
@@ -91,22 +94,39 @@ public class ChatActivity extends AppCompatActivity {
         //채팅내용 불러오기
         firestore = FirebaseFirestore.getInstance();
 
-        firestore.collectionGroup(chatRoomName).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//        firestore.collectionGroup(chatRoomName).get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//
+//                        for(int i=0; i<queryDocumentSnapshots.size();i++){
+//                            Map<String, Object> data =queryDocumentSnapshots.getDocuments().get(i).getData();
+//                            String msg = data.get("msg").toString();
+//                            String name = data.get("name").toString();
+//                            String profileUrl = data.get("profileUrl").toString();
+//                            String time = data.get("time").toString();
+//                            String userId = data.get("userId").toString();
+//                            messageItems.add(new MessageItem(userId,name,msg,profileUrl,time));
+//                        }
+//                    }
+//                });
 
-                        for(int i=0; i<queryDocumentSnapshots.size();i++){
-                            Map<String, Object> data =queryDocumentSnapshots.getDocuments().get(i).getData();
-                            String msg = data.get("msg").toString();
-                            String name = data.get("name").toString();
-                            String profileUrl = data.get("profileUrl").toString();
-                            String time = data.get("time").toString();
-                            String userId = data.get("userId").toString();
-                            messageItems.add(new MessageItem(userId,name,msg,profileUrl,time));
-                        }
+        firestore.collectionGroup(chatRoomName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    for(DocumentSnapshot document : documents){
+                        MessageItem item = document.toObject(MessageItem.class);
+                        messageItems.add(item);
                     }
-                });
+//                    Collections.reverse(messageItems);
+                    listView.setAdapter(chatAdapter);
+
+
+                }
+            }
+        });
 
         firestore.collection("chats").document(chatRoomName).collection(chatRoomName)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -115,8 +135,10 @@ public class ChatActivity extends AppCompatActivity {
                         if(error !=null){
                             return;
                         }
-                        if(snapshots != null){
-                            //todo: messageItems에 add하고 notify
+                        List<DocumentSnapshot> documents = snapshots.getDocuments();
+                        for(DocumentSnapshot doc:documents){
+                            MessageItem item = doc.toObject(MessageItem.class);
+                            messageItems.add(item);
                         }
                     }
                 });
@@ -144,12 +166,12 @@ public class ChatActivity extends AppCompatActivity {
 
             // 대화내용도 추가;
             TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
-            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm", Locale.KOREAN);
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss.SSS", Locale.KOREAN);
             dateFormat.setTimeZone(zone);
             String uploadtime = dateFormat.format(new Date());
 
             MessageItem item = new MessageItem(GUser.userId,GUser.nickname,textmsg,GUser.profileUrl,uploadtime);
-            firestore.collection("chats").document(chatRoomName).collection(chatRoomName).document().set(item)
+            firestore.collection("chats").document(chatRoomName).collection(chatRoomName).document(uploadtime).set(item)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
