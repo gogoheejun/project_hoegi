@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -122,7 +123,9 @@ public class ChatActivity extends AppCompatActivity {
                     }
 //                    Collections.reverse(messageItems);
                     listView.setAdapter(chatAdapter);
-
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        listView.setNestedScrollingEnabled(true);
+                    }
 
                 }
             }
@@ -139,6 +142,9 @@ public class ChatActivity extends AppCompatActivity {
                         for(DocumentSnapshot doc:documents){
                             MessageItem item = doc.toObject(MessageItem.class);
                             messageItems.add(item);
+
+                            chatAdapter.notifyDataSetChanged();
+                            listView.setSelection(messageItems.size()-1);
                         }
                     }
                 });
