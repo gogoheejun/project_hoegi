@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -111,18 +112,22 @@ public class ChatActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
-
+        Log.d("why","1111");//1
         firestore.collectionGroup(chatRoomName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
+                    messageItems.clear();
+                    Log.d("why","2222");//4
                     List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     for(DocumentSnapshot document : documents){
                         MessageItem item = document.toObject(MessageItem.class);
                         messageItems.add(item);
+                        Log.d("why","3333");
                     }
 //                    Collections.reverse(messageItems);
                     listView.setAdapter(chatAdapter);
+                    Log.d("why","4444");//5
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         listView.setNestedScrollingEnabled(true);
                     }
@@ -130,7 +135,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
+        Log.d("why","5555");//2
         firestore.collection("chats").document(chatRoomName).collection(chatRoomName)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -138,12 +143,20 @@ public class ChatActivity extends AppCompatActivity {
                         if(error !=null){
                             return;
                         }
-                        List<DocumentSnapshot> documents = snapshots.getDocuments();
-                        for(DocumentSnapshot doc:documents){
-                            MessageItem item = doc.toObject(MessageItem.class);
-                            messageItems.add(item);
+                        Log.d("why","6666");//3
+                        for(DocumentChange dc :snapshots.getDocumentChanges()){
+                            switch(dc.getType()){
+                                case ADDED:
+                                    MessageItem item = dc.getDocument().toObject(MessageItem.class);
+                                    Log.d("query", item.msg );
+                                    messageItems.add(item);
+                                    Log.d("why","7777");
+                                    break;
+                            }
+//                            MessageItem item = doc.toObject(MessageItem.class);
 
                             chatAdapter.notifyDataSetChanged();
+                            Log.d("why","8888");
                             listView.setSelection(messageItems.size()-1);
                         }
                     }

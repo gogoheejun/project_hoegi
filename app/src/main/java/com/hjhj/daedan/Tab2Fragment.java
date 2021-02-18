@@ -1,6 +1,9 @@
 package com.hjhj.daedan;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Tab2Fragment extends Fragment {
     ArrayList<MarkersItem> items = new ArrayList<MarkersItem>();
@@ -20,23 +32,33 @@ public class Tab2Fragment extends Fragment {
     Tab2_Chatlist_RecyclerAdapter adapter;
     SwipeRefreshLayout refreshLayout;
 
+    String chatRoomId;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //db에서 채팅받아오기
+        Log.d("roomname","111");
         loadData();
     }
 
     private void loadData() {
-        items.add(new MarkersItem("schoolaa","nameaa","aa","aa","201002161408","33aa","titleaa","msgaa","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolbb","namebb","aa","aa","201002160101","33aa","titlebb","msgbb","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolcc","namecc","aa","aa","201002111111","33aa","titlecc","msgbb","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolaa","nameaa","aa","aa","201002161408","33aa","titleaa","msgaa","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolbb","namebb","aa","aa","201002160101","33aa","titlebb","msgbb","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolcc","namecc","aa","aa","201002111111","33aa","titlecc","msgbb","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolaa","nameaa","aa","aa","201002161408","33aa","titleaa","msgaa","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolbb","namebb","aa","aa","201002160101","33aa","titlebb","msgbb","imgurlaa","aa","aa"));
-        items.add(new MarkersItem("schoolcc","namecc","aa","aa","201002111111","33aa","titlecc","msgbb","imgurlaa","aa","aa"));
+        String currentUser = GUser.userId;
+        //document의 이름(id)가져와서 currentUser이름이 들어있는지 비교
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        Log.d("roomname","222");
+        firestore.collection("chats").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot snapshots) {
+                        Log.d("roomname","333");
+                        for (int i=0; i<snapshots.size();i++){
+                            chatRoomId =snapshots.getDocuments().get(i).getId();
+                            Log.d("roomname",chatRoomId);
+                        }
+                    }
+                });
+
     }
 
     @Nullable
@@ -53,6 +75,7 @@ public class Tab2Fragment extends Fragment {
 
         adapter = new Tab2_Chatlist_RecyclerAdapter(getActivity(),items);
         recyclerView.setAdapter(adapter);
+
         refreshLayout= view.findViewById(R.id.layout_refresh);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
