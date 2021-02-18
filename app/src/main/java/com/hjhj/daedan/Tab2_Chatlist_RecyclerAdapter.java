@@ -18,9 +18,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Tab2_Chatlist_RecyclerAdapter extends RecyclerView.Adapter {
     Context context;
-    ArrayList<MarkersItem> items;
+    ArrayList<MessageItem> items;
 
-    public Tab2_Chatlist_RecyclerAdapter(Context context, ArrayList<MarkersItem> items) {
+    public Tab2_Chatlist_RecyclerAdapter(Context context, ArrayList<MessageItem> items) {
         this.context = context;
         this.items = items;
     }
@@ -38,12 +38,12 @@ public class Tab2_Chatlist_RecyclerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         VH vh = (VH)holder;
-        MarkersItem item = items.get(position);
-        vh.tvNickname.setText(item.nickname); //"("+item.school+")"
-        vh.tvMsg.setText(item.title);
-        vh.tvTime.setText(item.timeLength);
+        MessageItem item = items.get(position);
+        vh.tvNickname.setText(item.name); //"("+item.school+")"
+        vh.tvMsg.setText(item.msg);
+        vh.tvTime.setText(item.time);
 
-        Glide.with(context).load(item.imgUrl).into(vh.ivProfile);
+        Glide.with(context).load(item.profileUrl).into(vh.ivProfile);
     }
 
     @Override

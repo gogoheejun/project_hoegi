@@ -197,9 +197,23 @@ public class ChatActivity extends AppCompatActivity {
                             Log.d("chatRoomList","444");
                         }
                     });
+
+            firestore.collection("chats").document(chatRoomName).set(new Nothing("nothing"));
+
             et_textmsg.setText("");
         }
         Log.d("chatRoomList","333");
+    }
+
+    //의미없는클래스임...채팅방이름리스트 가져오려는데 필드값이 없으면 안돼서ㅠㅠㅠ어쩔수없이..
+    public class Nothing{
+        public String value;
+
+        public Nothing(){
+        }
+        public Nothing(String value){
+            this.value = value;
+        }
     }
 
 //서버에 채팅방리스트에 넣을거 만듦
