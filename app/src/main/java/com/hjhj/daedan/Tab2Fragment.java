@@ -55,11 +55,13 @@ public class Tab2Fragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    //Guser와의 대화상대만 고름
                     for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
                         Log.d("roomname","전체방들: "+documentSnapshot.getId());
                         roomname = documentSnapshot.getId();
                         if(roomname.contains(currentUser)){
                             Log.d("roomname","포함되는지 확인: "+currentUser+ "====>"+documentSnapshot.getId());
+                            //대화상대들 골랐다면 데이터 가져옴
                             getinto(roomname);
                         }
                     }
@@ -69,7 +71,11 @@ public class Tab2Fragment extends Fragment {
 //        Log.d("roomname",firestore.collection("chats").get().toString());
         Log.w("order","222");
     }
-
+    int i = -1;
+    int j = 0;
+    ArrayList<String> friendIdList = new ArrayList<>();
+//    ArrayList<String> friendIdList = new ArrayList<>();
+//    ArrayList<String> friendIdList = new ArrayList<>();
     private void getinto(String roomname) {
         Query query = firestore.getInstance().collection("chats").document(roomname)
                 .collection(roomname).orderBy("time",Query.Direction.DESCENDING).limit(1);
@@ -90,12 +96,14 @@ public class Tab2Fragment extends Fragment {
                         }else {
                             friendID = names[1];
                         }
-
-
+                        Log.e("order", "첫 friendid: "+friendID);
                         if((item.userId).equals(GUser.userId)){
+                            i++;
                             //최신글이 내가 쓴것이라면!!
                             //상대방닉네임이랑 프로필가져옴
-                            firestore.collection("users").document(friendID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            friendIdList.add(friendID);
+                            Log.w("order","friendlist("+i+"):  "+friendIdList.get(i));//하 이거 힘들었따. 쓰레드가 자동으로 되는건지 실행순서가 좀 다르게되서ㅠ
+                            firestore.collection("users").document(friendIdList.get(i)).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if(task.isSuccessful()){
@@ -104,18 +112,22 @@ public class Tab2Fragment extends Fragment {
                                         friendProfileUrl = documentSnapshot.getString("profile");
                                         item.name = friendName;
                                         item.profileUrl = friendProfileUrl;
-                                        Log.w("order","777"+friendName+" & "+item.name);
-                                        messageItems.add(item); //업데이트됐으면 그걸로 추가, 안됏으면 그대로 추가됨
+
+                                        item.userId=friendIdList.get(j); //이건 여기서는 필요없지만 채팅방으로 이동할때 상대방의 userid필요해서 어댑터를 위해 한것임
+                                        Log.w("order","777"+friendName+" & "+item.name+" & "+item.userId+" & firendid="+friendIdList.get(j));
+
+                                        messageItems.add(item);
                                         Collections.sort(messageItems,sortByTime);
                                         Collections.reverse(messageItems);
                                         //여기함수가 젤 늦게끝나니까 여기서 셋어뎁터해줌
                                         adapter.notifyDataSetChanged();
-//                                        recyclerView.setAdapter(adapter);
+                                        j++;
+
                                     }
                                 }
                             });
                         }else{ //최신글을 내가 쓴것이 아니라면!!
-                            Log.w("order","888"+friendName+" & "+item.name);
+                            Log.w("order","888"+friendName+" & "+item.name+" & "+item.userId);
                             messageItems.add(item); //업데이트됐으면 그걸로 추가, 안됏으면 그대로 추가됨
                             Collections.sort(messageItems,sortByTime);
                             Collections.reverse(messageItems);
@@ -128,14 +140,7 @@ public class Tab2Fragment extends Fragment {
                     }
 //                    Log.d("roomname", "일치하는 방들 중 첫번째 방의 작성자"+messageItems.get(0).name);
 //                    Log.d("roomname","일치하는 방 개수"+messageItems.size()+"");
-                    Log.w("order","333");
-
-                    //시간 제일 늦은게 제일 위로 정렬
-//                    Collections.sort(messageItems,sortByTime);
-//                    Collections.reverse(messageItems);
-//                    //여기함수가 젤 늦게끝나니까 여기서 셋어뎁터해줌
-//                    adapter.notifyDataSetChanged();
-//                    recyclerView.setAdapter(adapter);
+                    Log.w("order","333..getinto()함수 한번끝");
 
                 }
             }

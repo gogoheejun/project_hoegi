@@ -80,17 +80,6 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
 
                     int position = getLayoutPosition();
                     String userid = items.get(position).userid;
-//                    String nickname = items.get(position).nickname;
-//                    String school = items.get(position).school;
-//                    String title = items.get(position).title;
-//                    String msg = items.get(position).message;
-//
-//                    Intent intent = new Intent(context, WatchViewActivity.class);
-//                    intent.putExtra("nickname",nickname);
-//                    intent.putExtra("school",school);
-//                    intent.putExtra("title",title);
-//                    intent.putExtra("msg",msg);
-//                    context.startActivity(intent);
 
                     Intent intent = new Intent(context,WatchViewActivity.class);
                     intent.putExtra("markerUserid",userid);

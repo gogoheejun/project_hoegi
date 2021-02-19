@@ -175,7 +175,6 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        // TODO: 필터따라서 데이터 로드하기
 
                         filteredSchool1= null; //처음 널로 해줘야지 다시 필터링 또할때 초기화되서 다시 비교해줌
                         filteredSchool2 = null;
@@ -198,17 +197,10 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                         if (chb_category5.isChecked() || chb_categoryall.isChecked()) filteredCategory5 = chb_category5.getText().toString();
                         if (chb_category6.isChecked() || chb_categoryall.isChecked()) filteredCategory6 = chb_category6.getText().toString();
 
-//                        gMap.clear(); 이거 대신 리사이클러뷰 다 클리어시켜야 함
                         items.clear();
                         loadDataWithFilters();
 
 
-
-//                        //학교필터
-//                       filter_school();
-//
-//                       //테고리필터
-//                        filter_category();
 
 
                     }

@@ -90,6 +90,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="4dp"
@@ -101,5 +102,6 @@
         app:layout_anchorGravity="bottom|right|end"
         app:maxImageSize="36dp"
         app:pressedTranslationZ="12dp"
-        app:tint="@null" />
+        app:tint="@null"
+        android:onClick="click_fab"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

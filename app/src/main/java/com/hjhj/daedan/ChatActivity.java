@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,6 +47,7 @@ public class ChatActivity extends AppCompatActivity {
     String chatRoomName;
     String currentUser;
     String textmsg;
+    FloatingActionButton fab;
 
     ListView listView;
     ChatAdapter chatAdapter;
@@ -96,6 +98,7 @@ public class ChatActivity extends AppCompatActivity {
         //채팅내용 불러오기
         firestore = FirebaseFirestore.getInstance();
 
+        //##교수님이랑 한것임. 나중에 참고
 //        firestore.collectionGroup(chatRoomName).get()
 //                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 //                    @Override
@@ -112,6 +115,7 @@ public class ChatActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
+        //처음뷰
         Log.d("why","1111");//1
         firestore.collectionGroup(chatRoomName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -131,10 +135,12 @@ public class ChatActivity extends AppCompatActivity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         listView.setNestedScrollingEnabled(true);
                     }
-
+                    listView.setSelection(messageItems.size()-1);
+//                    listView.smoothScrollToPosition(messageItems.size()-1);
                 }
             }
         });
+        //추가될때
         Log.d("why","5555");//2
         firestore.collection("chats").document(chatRoomName).collection(chatRoomName)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -158,6 +164,7 @@ public class ChatActivity extends AppCompatActivity {
                             chatAdapter.notifyDataSetChanged();
                             Log.d("why","8888");
                             listView.setSelection(messageItems.size()-1);
+//                            listView.smoothScrollToPosition(messageItems.size()-1);
                         }
                     }
                 });
@@ -205,6 +212,12 @@ public class ChatActivity extends AppCompatActivity {
         Log.d("chatRoomList","333");
     }
 
+    public void click_fab(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+//        intent.putExtra("destUser",destUser);
+        startActivity(intent);
+    }
+
     //의미없는클래스임...채팅방이름리스트 가져오려는데 필드값이 없으면 안돼서ㅠㅠㅠ어쩔수없이..
     public class Nothing{
         public String value;
@@ -229,4 +242,5 @@ public class ChatActivity extends AppCompatActivity {
             this.destUser = destUser;
         }
     }
+
 }
