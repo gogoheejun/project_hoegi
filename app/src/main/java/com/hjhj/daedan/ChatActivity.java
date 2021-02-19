@@ -48,6 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     String currentUser;
     String textmsg;
     FloatingActionButton fab;
+    String destLatLon;
 
     ListView listView;
     ChatAdapter chatAdapter;
@@ -60,8 +61,27 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         et_textmsg = findViewById(R.id.chatActivity_et);
+        Intent intent = getIntent();
+        destUser = intent.getStringExtra("destUserId");
+        chatRoomName = intent.getStringExtra("chatRoomName");
+        currentUser = GUser.userId;
+//        todo:destLatLon
+        firestore = FirebaseFirestore.getInstance();
+        firestore.collection("markers").whereEqualTo("userid",destUser)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot:task.getResult()){
+                        Log.d("destuser",documentSnapshot.getData()+"");
+                    }
+                }else{
 
+                }
+            }
+        });
 
+//---------------------------
         //툴바 조정하기.
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingtoolbarlayout);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
@@ -75,7 +95,7 @@ public class ChatActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if(scrollRange+verticalOffset ==0){
-                    collapsingToolbarLayout.setTitle("this is title");
+                    collapsingToolbarLayout.setTitle(destUser);
                     isShow = true;
                 }else if(isShow){
                     collapsingToolbarLayout.setTitle(" ");
@@ -89,11 +109,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
-        //-----------------아래부터 내용관련
-        Intent intent = getIntent();
-        destUser = intent.getStringExtra("destUserId");
-        chatRoomName = intent.getStringExtra("chatRoomName");
-        currentUser = GUser.userId;
+       //-------------------
 
         //채팅내용 불러오기
         firestore = FirebaseFirestore.getInstance();
@@ -130,6 +146,7 @@ public class ChatActivity extends AppCompatActivity {
                         Log.d("why","3333");
                     }
 //                    Collections.reverse(messageItems);
+
                     listView.setAdapter(chatAdapter);
                     Log.d("why","4444");//5
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
