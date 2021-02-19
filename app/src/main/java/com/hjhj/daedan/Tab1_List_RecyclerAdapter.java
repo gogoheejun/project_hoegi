@@ -50,7 +50,12 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
         vh.tvMsg.setText(item.title);
         vh.tvLefttime.setText(item.timeLength);
 
-        Glide.with(context).load(item.imgUrl).into(vh.ivCategory);
+        if (item.category.equals("동아리 모집")) Glide.with(context).load(R.drawable.icon_club).into(vh.ivCategory);
+        if (item.category.equals("미팅 구해요")) Glide.with(context).load(R.drawable.icon_date).into(vh.ivCategory);
+        if (item.category.equals("스터디 모집")) Glide.with(context).load(R.drawable.icon_study).into(vh.ivCategory);
+        if (item.category.equals("운동 모집")) Glide.with(context).load(R.drawable.icon_sports).into(vh.ivCategory);
+        if (item.category.equals("파티 초대")) Glide.with(context).load(R.drawable.icon_party).into(vh.ivCategory);
+        if (item.category.equals("기타")) Glide.with(context).load(R.drawable.icon_mic).into(vh.ivCategory);
     }
 
     @Override

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:text="홍길동(한국외국어대학교)"
             android:layout_marginTop="12dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/tab1_recycler_item_iv"/>
 
         <TextView

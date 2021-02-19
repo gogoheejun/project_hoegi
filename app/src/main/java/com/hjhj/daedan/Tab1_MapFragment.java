@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -39,6 +42,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -484,11 +488,14 @@ public class Tab1_MapFragment extends Fragment implements
 
                         LatLng markerLoc = new LatLng(Double.parseDouble(markeritem.lat),Double.parseDouble(markeritem.lon));
 
-
+                        BitmapDrawable drawable =  (BitmapDrawable)getResources().getDrawable(R.drawable.icon_marker);
+                        Bitmap b = drawable.getBitmap();
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
                         Marker markers = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
                                 .title(markeritem.category)
-                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title));
+                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title)
+                                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
                         markers.setTag(markeritem.userid);
                         Log.d("TAG","tab1 map 333"+markers.getTag());
 

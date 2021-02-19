@@ -86,6 +86,7 @@ public class SignupActivity extends AppCompatActivity {
         String substring3 ="@uos.ac.kr";
         if(et_email.getText().toString().contains(substring1)|| et_email.getText().toString().contains(substring2)|| et_email.getText().toString().contains(substring3)){
 
+
         }else{
             Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
                 @Override
