@@ -3,12 +3,15 @@ package com.hjhj.daedan;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -67,42 +70,12 @@ public class ChatActivity extends AppCompatActivity {
         currentUser = GUser.userId;
 //        todo:destLatLon
         firestore = FirebaseFirestore.getInstance();
-        firestore.collection("markers").whereEqualTo("userid",destUser)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot documentSnapshot:task.getResult()){
-                        Log.d("destuser",documentSnapshot.getData()+"");
-                    }
-                }else{
 
-                }
-            }
-        });
+
 
 //---------------------------
-        //툴바 조정하기.
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingtoolbarlayout);
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        //툴바타이틀 사라지게.
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = true;
-            int scrollRange = -1;
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if(scrollRange ==-1){
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if(scrollRange+verticalOffset ==0){
-                    collapsingToolbarLayout.setTitle(destUser);
-                    isShow = true;
-                }else if(isShow){
-                    collapsingToolbarLayout.setTitle(" ");
-                    isShow = false;
-                }
-            }
-        });
+       Toolbar toolbar = findViewById(R.id.toolbar);
+       setSupportActionBar(toolbar);
 
         listView = findViewById(R.id.chatActivity_listview);
         chatAdapter = new ChatAdapter(this, messageItems);
@@ -187,6 +160,62 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.option,menu);
+        menu.findItem(R.id.menu_gotoWatchView).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(ChatActivity.this, WatchViewActivity.class);
+                intent.putExtra("markerUserid",destUser);
+                startActivity(intent);
+                return false;
+            }
+        });
+        //todo:지도로 이동시켜야 함.
+        //먼저 desuser의 쓴글의 latlon가져옴
+
+        menu.findItem(R.id.menu_gotoMap).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                firestore.collection("markers").whereEqualTo("userid",destUser)
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot documentSnapshot:task.getResult()){
+                                String lat = documentSnapshot.getData().get("lat").toString();
+                                String lon = documentSnapshot.getData().get("lon").toString();
+                                Log.d("toMap",lat);
+                                //todo: 아!!!!실수! 아래거 위치를 메뉴클릭으로 옮겨줘야 함!!
+//                                Bundle bundle = new Bundle();
+//                                bundle.putString("newBlueLat",lat);
+//                                bundle.putString("newBlueLon",lon);
+//                                Log.d("toMap","111"+bundle.toString());
+//                                Tab1_MapFragment mapFragment = new Tab1_MapFragment();
+//                                Log.d("toMap","222");
+//                                mapFragment.setArguments(bundle);
+//                                Log.d("toMap","333");
+                                Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+                                intent.putExtra("newBlueLat",lat);
+                                intent.putExtra("newBlueLon",lon);
+                                Log.d("toMap","Chat: lat"+lat);
+
+                                startActivity(intent);
+
+                            }
+                        }else{
+
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void clickSend(View view) {

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -103,6 +105,7 @@ public class Tab1_MapFragment extends Fragment implements
 
     String filteredSchool1, filteredSchool2,filteredSchool3;
     String filteredCategory1,filteredCategory2,filteredCategory3,filteredCategory4,filteredCategory5,filteredCategory6;
+    String newBlueLat,newBlueLon;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +131,17 @@ public class Tab1_MapFragment extends Fragment implements
         tv_temperature = view.findViewById(R.id.page_map_tv_temperature);
         iv_weather = view.findViewById(R.id.page_map_iv_weather);
         iv_reload = view.findViewById(R.id.page_map_iv_reload);
+
+        Intent intent = getActivity().getIntent();
+        newBlueLat = intent.getStringExtra("newBlueLat");
+        newBlueLon = intent.getStringExtra("newBlueLon");
+//        if(getArguments() !=null){
+//            newBlueLat = getArguments().getString("newBlueLat");
+//            newBlueLon = getArguments().getString("newBlueLon");
+//        }
+
+        Log.d("toMap","Mapfrag 111 :"+newBlueLat);
+
         iv_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,8 +180,16 @@ public class Tab1_MapFragment extends Fragment implements
                 Log.d("gotit", "locationlistenr:" + bluedotLat + " " + bluedotLon);
 
 
+//                Intent intent = getI
+                if(newBlueLat != null){
+                    bluedotLat = Double.parseDouble(newBlueLat);
+                    bluedotLon = Double.parseDouble(newBlueLon);
+                    Log.d("toMap","Mapfrag 222: "+newBlueLat);
+                }
                 LatLng latLng = new LatLng(bluedotLat, bluedotLon);
-                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,12 ));
+                Log.d("toMap","Mapfrag 333: "+newBlueLat);
+                Log.d("toMap","Mapfrag 444: "+bluedotLat);
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
             }
         };
 
@@ -415,10 +437,31 @@ public class Tab1_MapFragment extends Fragment implements
                         LatLng markerLoc = new LatLng(Double.parseDouble(markeritem.lat),Double.parseDouble(markeritem.lon));
 
 
+                        BitmapDrawable drawable =  (BitmapDrawable)getResources().getDrawable(R.drawable.icon_mic);
+                        if (markeritem.category.equals("동아리 모집")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_club);
+                        }
+                        if(markeritem.category.equals("미팅 구해요")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_date);
+                        }
+                        if(markeritem.category.equals("운동 모집")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_sports);
+                        }
+                        if(markeritem.category.equals("파티 초대")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_party);
+                        }if(markeritem.category.equals("스터디 모집")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_study);
+                        }
+                        Bitmap b = drawable.getBitmap();
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
+
                         Marker markers = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
                                 .title(markeritem.category)
-                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title));
+                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title)
+                                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+                        markers.setVisible(true);
+
                         markers.setTag(markeritem.userid);
                         Log.d("TAG","afterFilter 333"+markers.getTag());
 
@@ -434,7 +477,6 @@ public class Tab1_MapFragment extends Fragment implements
 
                             }
                         });
-
                     }
                 }
             }
@@ -462,6 +504,7 @@ public class Tab1_MapFragment extends Fragment implements
         }
     }
 
+    Marker marker1;
     //제일처음 마커불러오기--onMapready()에서 처음 한번만 쓰임
     public void drawMarkers(){
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -469,7 +512,7 @@ public class Tab1_MapFragment extends Fragment implements
         firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                markers = new MarkerOptions();
+//                markers = new MarkerOptions();
                 if(task.isSuccessful()){
                     Log.d("TAG","tab1 map 222");
                     for (QueryDocumentSnapshot document : task.getResult()){
@@ -487,22 +530,43 @@ public class Tab1_MapFragment extends Fragment implements
                         markeritem.nickname = marker.get("nickname").toString();
 
                         LatLng markerLoc = new LatLng(Double.parseDouble(markeritem.lat),Double.parseDouble(markeritem.lon));
+//
 
-                        BitmapDrawable drawable =  (BitmapDrawable)getResources().getDrawable(R.drawable.icon_marker);
+                        BitmapDrawable drawable =  (BitmapDrawable)getResources().getDrawable(R.drawable.icon_mic);
+                        if (markeritem.category.equals("동아리 모집")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_club);
+                        }
+                        if(markeritem.category.equals("미팅 구해요")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_date);
+                        }
+                        if(markeritem.category.equals("운동 모집")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_sports);
+                        }
+                        if(markeritem.category.equals("파티 초대")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_party);
+                        }if(markeritem.category.equals("스터디 모집")){
+                            drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.icon_study);
+                        }
+
+
+//                        BitmapDrawable drawable =  (BitmapDrawable)getResources().getDrawable(R.drawable.icon_marker);
                         Bitmap b = drawable.getBitmap();
                         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
-                        Marker markers = gMap.addMarker(new MarkerOptions()
+
+                        Marker marker1 = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
                                 .title(markeritem.category)
                                 .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title)
                                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
-                        markers.setTag(markeritem.userid);
-                        Log.d("TAG","tab1 map 333"+markers.getTag());
+
+
+                        marker1.setTag(markeritem.userid);
+                        Log.d("TAG","tab1 map 333"+marker1.getTag());
 
                         gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                             @Override
                             public void onInfoWindowClick(Marker marker) {
-                                Log.d("TAG","444"+markers.getTag()+"/"+marker.getTag());
+                                Log.d("TAG","444"+marker1.getTag()+"/"+marker.getTag());
 
                                 Intent intent = new Intent(getActivity(),WatchViewActivity.class);
                                 intent.putExtra("markerUserid",marker.getTag().toString());
@@ -515,6 +579,28 @@ public class Tab1_MapFragment extends Fragment implements
             }
         });
     }
+
+//    public BitmapDescriptor getBitmapFromView(String title) {
+//        View view = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.my_messagebox, null);
+//        ((TextView) view.findViewById(R.id.Messagebox_tv_name)).setText(title);
+//
+//        //Get the dimensions of the view. In my case they are in a dimen file
+//        int width = getActivity().getResources().getDimensionPixelSize(R.dimen.my_value);
+//        int height = getActivity().getResources().getDimensionPixelSize(R.dimen.my_value);
+//
+//        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
+//        int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
+//
+//        view.measure(measuredWidth, measuredHeight);
+//        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+//
+//        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//
+//        view.draw(canvas);
+//
+//        return BitmapDescriptorFactory.fromBitmap(bitmap);
+//    }
 
     @Override
     public void onCameraIdle() {
