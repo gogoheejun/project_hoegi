@@ -76,7 +76,8 @@ public class ChatActivity extends AppCompatActivity {
 //---------------------------
        Toolbar toolbar = findViewById(R.id.toolbar);
        setSupportActionBar(toolbar);
-
+        getSupportActionBar().setTitle("채팅하기");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         listView = findViewById(R.id.chatActivity_listview);
         chatAdapter = new ChatAdapter(this, messageItems);
 

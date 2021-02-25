@@ -3,7 +3,7 @@
 
     <item android:id="@+id/menu_bnv_tab1"
         android:title="메인"
-        android:icon="@drawable/menu_bnv_main"/>
+        android:icon="@drawable/menu_bnv_map"/>
     <item android:id="@+id/menu_bnv_tab2"
         android:title="채팅"
         android:icon="@drawable/menu_bnv_chat" />

@@ -553,10 +553,12 @@ public class Tab1_MapFragment extends Fragment implements
                         Bitmap b = drawable.getBitmap();
                         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
 
+                        String time1 = markeritem.uploadTime.substring(4,6);
+                        String time2 = markeritem.uploadTime.substring(6,8);
                         Marker marker1 = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
                                 .title(markeritem.category)
-                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title)
+                                .snippet("["+time1+"월"+time2+"일"+"]"+markeritem.title )
                                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
 
 

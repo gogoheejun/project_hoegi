@@ -19,5 +19,5 @@
         android:layout_alignParentBottom="true"
         app:menu="@menu/bnv"
         app:itemTextColor="@color/bnv_item"
-        app:itemIconSize="30dp"/>
+        app:itemIconSize="25dp"/>
 </RelativeLayout>

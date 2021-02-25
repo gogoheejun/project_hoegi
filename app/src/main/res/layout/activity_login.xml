@@ -17,17 +17,18 @@
     
     <EditText
         android:id="@+id/activitylogin_et_email"
-        android:hint="  이메일"
+        android:hint="이메일"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="20sp"
         android:maxLines="1"
         android:background="@drawable/loginactivity_et_box"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="4dp"
+        android:paddingLeft="8dp"/>
     <EditText
         android:id="@+id/activitylogin_et_pw"
-        android:hint="  비밀번호"
+        android:hint="비밀번호"
         android:layout_width="300dp"
         android:inputType="textPassword"
         android:textSize="20sp"
@@ -36,7 +37,7 @@
         android:layout_below="@id/activitylogin_et_email"
         android:layout_alignLeft="@id/activitylogin_et_email"
         android:maxLength="20"
-
+        android:paddingLeft="8dp"
         android:imeOptions="actionDone"/>
 
     <Button
