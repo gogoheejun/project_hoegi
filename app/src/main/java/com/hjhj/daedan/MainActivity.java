@@ -29,13 +29,19 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String newBlueLat = intent.getStringExtra("newBlueLat");
         String newBlueLon = intent.getStringExtra("newBlueLon");
+        String name = intent.getStringExtra("name");
 
-
-        fragments[0] = new Tab1Fragment();
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction tran = fragmentManager.beginTransaction();
-        tran.add(R.id.MainActivity_container,fragments[0]);
+
+        if(name !=null){
+            fragments[1] = new Tab2Fragment();
+            tran.add(R.id.MainActivity_container, fragments[1]);
+        }else {
+            fragments[0] = new Tab1Fragment();
+            tran.add(R.id.MainActivity_container,fragments[0]);
+        }
 
         tran.commit();
 
@@ -50,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId()){
                     case R.id.menu_bnv_tab1:
+                        if(fragments[0]==null){
+                            fragments[0] = new Tab1Fragment();
+                            tran.add(R.id.MainActivity_container, fragments[0]);
+                        }
                         tran.show(fragments[0]);
                         break;
                     case R.id.menu_bnv_tab2:

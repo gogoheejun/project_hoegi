@@ -52,8 +52,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-firestore:22.1.0'
+    implementation 'com.google.firebase:firebase-messaging'
 
     implementation 'androidx.multidex:multidex:2.0.1'
+
+
+    //Retrofit 라이브러리 추가...retrofit쓸라면 아래 3개 걍 세트로 추가하삼
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //레트로핏의 응답결과를 String으로 받고싶을때 필요한 Converter...에코를 json으로 안할때
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
 
 
 }

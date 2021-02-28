@@ -6,14 +6,16 @@ public class UsersItem {
     public String nickname;
     public String userid;
     public String email;
+    public String token;
 
     public UsersItem() {
     }
 
-    public UsersItem(String profile, String nickname, String userid, String email) {
+    public UsersItem(String profile, String nickname, String userid, String email, String token) {
         this.profile = profile;
         this.nickname = nickname;
         this.userid = userid;
         this.email = email;
+        this.token = token;
     }
 }

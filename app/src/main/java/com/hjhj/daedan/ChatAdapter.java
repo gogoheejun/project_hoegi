@@ -58,7 +58,13 @@ public class ChatAdapter extends BaseAdapter {
 
         tvName.setText(item.name);
         tvMsg.setText(item.msg);
-        tvTime.setText(item.time);
+//        String adjustedTimeYear = item.time.substring(0,4)+"년";
+        String adjustedTimeMonth = item.time.substring(4,6)+"월";
+        String adjustedTimeDay = item.time.substring(6,8)+"일";
+        String adjustedTimeHour = item.time.substring(8,10)+"시";
+        String adjustedTimeMin = item.time.substring(10,12)+"분";
+        String adjustedTime = adjustedTimeMonth+adjustedTimeDay+" "+adjustedTimeHour+adjustedTimeMin;
+        tvTime.setText(adjustedTime);
 
         Glide.with(context).load(item.profileUrl).into(civ);
 

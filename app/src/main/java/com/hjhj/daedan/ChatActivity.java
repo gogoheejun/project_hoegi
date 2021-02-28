@@ -38,10 +38,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -69,7 +76,6 @@ public class ChatActivity extends AppCompatActivity {
         chatRoomName = intent.getStringExtra("chatRoomName");
         currentUser = GUser.userId;
 //        todo:destLatLon
-        firestore = FirebaseFirestore.getInstance();
 
 
 
@@ -159,10 +165,106 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
 
+        //-----------상대방 token값가져오기
+        firestore.collection("users").document(destUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    destToken = documentSnapshot.getString("token");
+                }
+            }
+        });
 
     }
 
-    @Override
+    String destToken;
+
+
+    public void clickSend(View view) {
+        textmsg = et_textmsg.getText().toString();
+        if(textmsg!=""){
+
+            //처음 보내는 거라면 보낼때 챗룸리스트에 이름추가
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            UserForChatRoomList userForChatRoomList = new UserForChatRoomList(currentUser,destUser);
+            firestore.collection("chatRoomNameList").document(chatRoomName).set(userForChatRoomList)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("chatRoomList","222");
+
+                        }
+                    });
+            //처음보내는게 아니라면, ...음일단나중에
+            Log.d("chatRoomList","111");
+
+            // 대화내용도 추가;
+            TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss.SSS", Locale.KOREAN);
+            dateFormat.setTimeZone(zone);
+            String uploadtime = dateFormat.format(new Date());
+
+            MessageItem messageItem = new MessageItem(GUser.userId,GUser.nickname,textmsg,GUser.profileUrl,uploadtime);
+            firestore.collection("chats").document(chatRoomName).collection(chatRoomName).document(uploadtime).set(messageItem)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("chatRoomList","444");
+                        }
+                    });
+
+            firestore.collection("chats").document(chatRoomName).set(new Nothing("nothing"));//파베 특성상 어쩔수없이 넣었음;;;내가 몰라서그러는것임ㅋㅋ
+// TODO: 2021-02-28
+// push를 위해서, ftp://alexang.dothome.co.kr/html/FCMforProject/fcmPush_Chat.php에다가 내용보내줌
+
+            //보낼 데이터들: GUser.nickname(보내는사람닉네임), destUser(받는사람userid 원래는 보내는건데, 이건 파배니까 걍 상대방token도 여기서 구해서 보내버려서 필요없음),
+            // 상대방 token값(원래 sql로 하면 php에서 가져와야 하는거라 여기가 아니라 php에서해야하는건데, 파배니까 여기서 다 구해버림), textmsg(내용)
+            firestore.collection("users").document(destUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        destToken = documentSnapshot.getString("token");
+                    }
+                }
+            });
+//이제 php파일로 보냄
+            String baseUrl = "http://alexang.dothome.co.kr/";
+            Retrofit.Builder builder = new Retrofit.Builder();
+            builder.baseUrl(baseUrl);
+            builder.addConverterFactory(ScalarsConverterFactory.create());
+            Retrofit retrofit = builder.build();
+            RetrofitService retrofitService = retrofit.create(RetrofitService.class);
+
+            Map<String, String> dataForPush = new HashMap<>();
+            dataForPush.put("name", GUser.nickname);
+            dataForPush.put("token", destToken);
+            dataForPush.put("msg",textmsg);
+
+            Call<String> call = retrofitService.postChat(dataForPush);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    String s = response.body();
+                    Log.d("token", "onResponse: success");
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.d("token", "error: "+t.getMessage());
+                }
+            });
+
+            et_textmsg.setText("");
+        }
+        Log.d("chatRoomList","333");
+    }
+
+
+    //------------------------------------다음부턴 옵션메뉴뉴
+
+   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.option,menu);
         menu.findItem(R.id.menu_gotoWatchView).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -218,45 +320,6 @@ public class ChatActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void clickSend(View view) {
-        textmsg = et_textmsg.getText().toString();
-        if(textmsg!=""){
-
-            //처음 보내는 거라면 보낼때 챗룸리스트에 이름추가
-            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-            UserForChatRoomList userForChatRoomList = new UserForChatRoomList(currentUser,destUser);
-            firestore.collection("chatRoomNameList").document(chatRoomName).set(userForChatRoomList)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("chatRoomList","222");
-
-                        }
-                    });
-            //처음보내는게 아니라면, ...음일단나중에
-            Log.d("chatRoomList","111");
-
-            // 대화내용도 추가;
-            TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
-            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss.SSS", Locale.KOREAN);
-            dateFormat.setTimeZone(zone);
-            String uploadtime = dateFormat.format(new Date());
-
-            MessageItem item = new MessageItem(GUser.userId,GUser.nickname,textmsg,GUser.profileUrl,uploadtime);
-            firestore.collection("chats").document(chatRoomName).collection(chatRoomName).document(uploadtime).set(item)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("chatRoomList","444");
-                        }
-                    });
-
-            firestore.collection("chats").document(chatRoomName).set(new Nothing("nothing"));
-
-            et_textmsg.setText("");
-        }
-        Log.d("chatRoomList","333");
-    }
 
     public void click_fab(View view) {
         Intent intent = new Intent(this, MainActivity.class);

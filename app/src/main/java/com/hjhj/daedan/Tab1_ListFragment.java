@@ -282,7 +282,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
 
 
                     }
-                    Log.d("markeritem",items.get(0).nickname+"\n"+items.get(1).nickname+"\n"+items.get(2).nickname);
+//                    Log.d("markeritem",items.get(0).nickname+"\n"+items.get(1).nickname+"\n"+items.get(2).nickname);
 
                     //리사이클러뷰에 어댑터랑 items를 결합!...원래는 onViewCreated에서 했었는데 여기선 데이터를 다 받아온 다음에 해야하니까
 //                    여기서 함

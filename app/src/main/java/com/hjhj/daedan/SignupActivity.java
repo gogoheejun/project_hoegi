@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,6 +46,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     String profileUrl;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,26 @@ public class SignupActivity extends AppCompatActivity {
         et_password2 = findViewById(R.id.signupactivity_et_password2);
 
         mAuth = FirebaseAuth.getInstance();
+
+//토큰값 가져오기
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(!task.isSuccessful()){
+//                    Toast.makeText(LoginActivity.this, "토큰등록 실패", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                token = task.getResult();
+
+                //추후에 이 토큰값을 dothome서버에서 사용하고자 하기에 Log로 출력해보기
+                //그리고 화면에 보기 위해 Toast도 출력
+//                Toast.makeText(LoginActivity.this, ""+token, Toast.LENGTH_SHORT).show();
+                Log.i("TOKEN", token);
+                //원래는 이 token값을 웹서버(dothome같은) 에 전송하여 회원정보를 db에 저장하듯이 token값도 DB에 저장해놓아야 함
+
+            }
+        });
 
 
     }
@@ -140,19 +163,12 @@ public class SignupActivity extends AppCompatActivity {
                                 profileUrl = uri.toString();
 //                                Toast.makeText(SignupActivity.this, "프로필이미지 firestorage에 저장쓰", Toast.LENGTH_SHORT).show();
 
-                                //프로필을 스토리지에 올렸으면, 그 url을 유저db에다가 보관
-
-
+                                //★★★프로필을 스토리지에 올렸으면, 그 url을 유저db에다가 보관
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                                Log.d("process","1111");
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                Log.d("process","2222");
                                 String userid = user.getUid();
-                                Log.d("process","3333");
                                 String userEmail = user.getEmail();
-                                Log.d("process","4444");
-                                UsersItem item = new UsersItem(profileUrl,et_nickname.getText().toString(),userid, userEmail); //프로필이미지, 닉네임, userid, 이메일
-                                Log.d("process","5555");
+                                UsersItem item = new UsersItem(profileUrl,et_nickname.getText().toString(),userid, userEmail,token); //프로필이미지, 닉네임, userid, 이메일
                                 firestore.collection("users").document(userid).set(item)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -213,6 +229,14 @@ public class SignupActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "이메일 또는 비번입력!", Toast.LENGTH_SHORT).show();
         }
+
+        //마무리했으면 그 정보를 sharedPreference에 저장
+        SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString("email", email);
+        editor.putString("password",password);
+        editor.commit();
 
     }
 
