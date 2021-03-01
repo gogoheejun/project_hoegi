@@ -274,7 +274,7 @@ public class Tab1_MapFragment extends Fragment implements
                 });
                 chb_categoryall = layout.findViewById(R.id.tab1_dialog_filter_category_all);
 
-                favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
+//                favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
 
 
                 builder.setView(layout);

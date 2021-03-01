@@ -109,9 +109,8 @@ public class SignupActivity extends AppCompatActivity {
         String substring3 ="@uos.ac.kr";
         if(et_email.getText().toString().contains(substring1)|| et_email.getText().toString().contains(substring2)|| et_email.getText().toString().contains(substring3)){
 
-
         }else{
-            Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
+            Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다. 단, 인증번호를 무시하고 비밀번호를 등록하세요", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -129,6 +128,17 @@ public class SignupActivity extends AppCompatActivity {
 
         if(et_nickname.getText().toString().length() <3){
             Toast.makeText(this, "닉네임은 3문자 이상 입력해주세요", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String substring1 ="@hufs.ac.kr";
+        String substring2 ="@khu.ac.kr";
+        String substring3 ="@uos.ac.kr";
+        if(!et_email.getText().toString().contains(substring1)|| !et_email.getText().toString().contains(substring2)|| !et_email.getText().toString().contains(substring3)){
+            Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다. 단, 인증번호를 무시하고 비밀번호를 등록하세요", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            }).show();
             return;
         }
         if(ischecked == false){
@@ -219,7 +229,8 @@ public class SignupActivity extends AppCompatActivity {
 
                                 }else{
                                     if(task.getException() != null)
-                                        Toast.makeText(SignupActivity.this, ""+task.getException().toString(), Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(SignupActivity.this, ""+task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SignupActivity.this, "오류발생 다시 시도해주세요", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

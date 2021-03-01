@@ -57,17 +57,18 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:text="2월09일 16:16"
-                    android:layout_toLeftOf="@id/WatchView_tv_timeLength"
-                    android:layout_alignTop="@id/WatchView_tv_timeLength"/>
-                <TextView
-                    android:id="@+id/WatchView_tv_timeLength"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="4dp"
-                    android:textSize="12sp"
-                    android:text="+3일 후 삭제"
+                    android:layout_alignRight="@id/WatchView_tv_category"
                     android:layout_below="@id/WatchView_tv_category"
-                    android:layout_alignRight="@id/WatchView_tv_category"/>
+                    />
+<!--                <TextView-->
+<!--                    android:id="@+id/WatchView_tv_timeLength"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:paddingLeft="4dp"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:text="+3일 후 삭제"-->
+<!--                    android:layout_below="@id/WatchView_tv_category"-->
+<!--                    android:layout_alignRight="@id/WatchView_tv_category"/>-->
 
 
             </RelativeLayout>

@@ -74,8 +74,14 @@ public class WatchViewActivity extends AppCompatActivity {
                     tv_title.setText(item.title);
                     tv_msg.setText(item.message);
                     tv_category.setText(item.category);
-                    tv_uploadedTime.setText(item.uploadTime);
-                    tv_timeLength.setText("+"+ item.timeLength+" 후 삭제");
+
+                    String year = item.uploadTime.substring(0,4);
+                    String month = item.uploadTime.substring(4,6);
+                    String day = item.uploadTime.substring(6,8);
+                    String hour = item.uploadTime.substring(8,10);
+                    String min = item.uploadTime.substring(10,12);
+                    tv_uploadedTime.setText(year+"년 "+month+"월"+day+"일 "+hour+":"+min);
+//                    tv_timeLength.setText("+"+ item.timeLength+" 후 삭제");
 
                     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                     StorageReference imgRef = firebaseStorage.getReference().child("writeImg/"+ item.uploadTime+".png");

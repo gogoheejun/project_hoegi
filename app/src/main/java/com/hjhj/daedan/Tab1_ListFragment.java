@@ -166,7 +166,7 @@ public class Tab1_ListFragment extends Fragment implements View.OnClickListener 
                 });
                 chb_categoryall = layout.findViewById(R.id.tab1_dialog_filter_category_all);
 
-                favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
+//                favSwtich = layout.findViewById(R.id.tab1_dialog_filter_Switch);
 
 
                 builder.setView(layout);

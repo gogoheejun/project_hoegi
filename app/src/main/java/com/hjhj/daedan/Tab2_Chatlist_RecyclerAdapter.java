@@ -49,7 +49,14 @@ public class Tab2_Chatlist_RecyclerAdapter extends RecyclerView.Adapter {
         MessageItem item = items.get(position);
         vh.tvNickname.setText(item.name); //"("+item.school+")"
         vh.tvMsg.setText(item.msg);
-        vh.tvTime.setText(item.time);
+
+
+        String year =item.time.substring(0,4);
+        String month = item.time.substring(4,6);
+        String day = item.time.substring(6,8);
+        String hour = item.time.substring(8,10);
+        String min = item.time.substring(10,12);
+        vh.tvTime.setText(year+"년 "+month+"월"+day+"일 "+hour+":"+min);
         vh.destUserId = item.userId;
 
         Glide.with(context).load(item.profileUrl).into(vh.ivProfile);

@@ -3,10 +3,10 @@
 
     <item android:id="@+id/menu_bnv_tab1"
         android:title="메인"
-        android:icon="@drawable/menu_bnv_main"/>
+        android:icon="@drawable/icon_map"/>
     <item android:id="@+id/menu_bnv_tab2"
         android:title="채팅"
-        android:icon="@drawable/menu_bnv_chat" />
+        android:icon="@drawable/icon_chat" />
     <item android:id="@+id/menu_bnv_tab3"
         android:title="My"
         android:icon="@drawable/menu_bnv_my"/>

@@ -107,23 +107,23 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/icon_fav_color"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  체크한 것만 보기 "/>
-    </LinearLayout>
-    <Switch
-        android:id="@+id/tab1_dialog_filter_Switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:thumbTint="@color/green2"
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="match_parent">-->
+<!--        <ImageView-->
+<!--            android:layout_width="18dp"-->
+<!--            android:layout_height="18dp"-->
+<!--            android:src="@drawable/icon_fav_color"/>-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="  체크한 것만 보기 "/>-->
+<!--    </LinearLayout>-->
+<!--    <Switch-->
+<!--        android:id="@+id/tab1_dialog_filter_Switch"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:thumbTint="@color/green2"-->
 
-        />
+<!--        />-->
 </LinearLayout>
