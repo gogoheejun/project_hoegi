@@ -7,17 +7,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +22,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FavActivity extends AppCompatActivity {
-    ArrayList<MarkersItem> items = new ArrayList<>();
+    ArrayList<MarkersItem> markersitems = new ArrayList<>();
     RecyclerView recyclerView;
     FavAdapter adapter;
     SwipeRefreshLayout refreshLayout;
@@ -34,19 +30,31 @@ public class FavActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav);
+        refreshLayout = findViewById(R.id.layout_refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                markersitems.clear();
+                loadData();
+                refreshLayout.setRefreshing(false);
+            }
+        });
 
         recyclerView= findViewById(R.id.fav_recycler);
 //        adapter= new favAdapter(this, items);
 //        recyclerView.setAdapter(adapter);
+        adapter = new FavAdapter(FavActivity.this, markersitems);
 
     }
-String favID;
+//String favID;
     @Override
     protected void onResume() {
         super.onResume();
 
         loadData();
     }
+
+    ArrayList<FavItem> list;
     void loadData(){
 
         Retrofit.Builder builder= new Retrofit.Builder();
@@ -59,55 +67,71 @@ String favID;
         call.enqueue(new Callback<ArrayList<FavItem>>() {
             @Override
             public void onResponse(Call<ArrayList<FavItem>> call, Response<ArrayList<FavItem>> response) {
-                items.clear();
 
 
-                ArrayList<FavItem> list = response.body();
-                for(FavItem listitem: list ){
-                    favID = listitem.favID;
-                    loadData2();
-//                    Log.d("loadfav",listitem.favID);
-                    // TODO: 2021-03-02
-//                    adapter.notifyItemInserted(0);
+                markersitems.clear();
+                list = response.body();
+                Log.d("fav","loadData()"+list.get(0).favID);
+                loadData2();
 
-                }
+//                list = response.body();
+//                for(FavItem listitem: list ){
+//                    favID = listitem.favID;
+//                    loadData2();
+//
+////                    Log.d("loadfav",listitem.favID);
+//                    // TODO: 2021-03-02
+////                    adapter.notifyItemInserted(0);
+//
+//                }
             }
 
             @Override
             public void onFailure(Call<ArrayList<FavItem>> call, Throwable t) {
-                Log.d("loadfav","에러"+t.getMessage());
+                Log.d("fav","에러"+t.getMessage());
             }
         });
     }
 //------------------------
-    void loadData2(){
-        Log.d("TAG", "list_loadData");
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("markers").whereEqualTo("userid",favID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    //일부러 MarkersItem을 MarkersItem_static이랑 따로만듦. 스태틱으로만 하면 item안에 있는 요소들 다 똑같아짐
-                    for (QueryDocumentSnapshot document : task.getResult()){
-                        Map<String, Object> marker = document.getData();
+    int a=0;
+    int b=0;
+    void loadData2() {
+        for (FavItem listitem : list) {
+            a++;
+            String favID = listitem.favID;
+            Log.d("fav", "loadDATA2()" + favID);
 
-                        items.add( new MarkersItem(marker.get("school").toString(),marker.get("nickname").toString(),marker.get("userid").toString(),marker.get("category").toString(),
-                                marker.get("uploadTime").toString(), marker.get("timeLength").toString(),marker.get("title").toString(),marker.get("message").toString(), marker.get("imgUrl").toString(),
-                                marker.get("lat").toString(), marker.get("lon").toString()));
-
-
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("markers").document(favID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        MarkersItem markersItem = new MarkersItem();
+                        markersItem.school = documentSnapshot.getString("school");
+                        markersItem.nickname = documentSnapshot.getString("nickname");
+                        markersItem.userid = documentSnapshot.getString("userid");
+                        markersItem.category = documentSnapshot.getString("category");
+                        markersItem.uploadTime = documentSnapshot.getString("uploadTime");
+                        markersItem.timeLength = documentSnapshot.getString("timeLength");
+                        markersItem.title = documentSnapshot.getString("title");
+                        markersItem.message = documentSnapshot.getString("message");
+                        markersItem.imgUrl = documentSnapshot.getString("imgUrl");
+                        markersItem.lat = documentSnapshot.getString("lat");
+                        markersItem.lon = documentSnapshot.getString("lon");
+                        markersitems.add(markersItem);
+//                        Log.d("fav", "loadDATA2()22" + markersitems.size()+"  "+ markersitems.get(b).nickname);
+                        b++;
+                        if (a == b) {
+//                            adapter = new FavAdapter(FavActivity.this, items);
+                            recyclerView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
-//                    Log.d("markeritem",items.get(0).nickname+"\n"+items.get(1).nickname+"\n"+items.get(2).nickname);
-
-                    //리사이클러뷰에 어댑터랑 items를 결합!...원래는 onViewCreated에서 했었는데 여기선 데이터를 다 받아온 다음에 해야하니까
-//                    여기서 함
-                    adapter = new FavAdapter(FavActivity.this,items);
-                    recyclerView.setAdapter(adapter);
                 }
-            }
-        });
+            });
+        }
+
+
     }
-
-
 }
