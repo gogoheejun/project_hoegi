@@ -553,10 +553,16 @@ public class Tab1_MapFragment extends Fragment implements
                         Bitmap b = drawable.getBitmap();
                         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
 
+                        String year =markeritem.uploadTime.substring(0,4);
+                        String month = markeritem.uploadTime.substring(4,6);
+                        String day = markeritem.uploadTime.substring(6,8);
+                        String hour =markeritem.uploadTime.substring(8,10);
+                        String min = markeritem.uploadTime.substring(10,12);
+
                         Marker marker1 = gMap.addMarker(new MarkerOptions()
                                 .position(markerLoc)
                                 .title(markeritem.category)
-                                .snippet("["+ markeritem.uploadTime+"] "+ markeritem.title)
+                                .snippet("["+ year+"/"+month+"/"+day+"/"+hour+":"+min+"] "+ markeritem.title)
                                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
 
 

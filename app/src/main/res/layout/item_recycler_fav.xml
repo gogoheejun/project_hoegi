@@ -38,15 +38,7 @@
             android:layout_below="@id/fav_item_nameschool"
             android:layout_marginTop="8dp"
             android:layout_alignLeft="@id/fav_item_nameschool"/>
-        <TextView
-            android:id="@+id/tab1_recycler_item_lefttime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3시간 후 삭제"
-            android:textSize="12sp"
-            android:layout_alignTop="@id/fav_item_nameschool"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="12dp"/>
+
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

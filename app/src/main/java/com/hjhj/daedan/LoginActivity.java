@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                     DocumentSnapshot documentSnapshot = task.getResult();
                    GUser.nickname = documentSnapshot.getString("nickname");
                    GUser.userId = documentSnapshot.getString("userid");
-                   String email = documentSnapshot.getString("userid");
+                   String email = documentSnapshot.getString("email");
                    String domain = email.substring(email.indexOf("@")+1);
                    switch (domain){
                        case "hufs.ac.kr":

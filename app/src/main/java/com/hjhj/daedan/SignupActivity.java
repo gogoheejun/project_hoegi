@@ -48,6 +48,7 @@ public class SignupActivity extends AppCompatActivity {
     String profileUrl;
     String token;
 
+    boolean checknum = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,13 +108,16 @@ public class SignupActivity extends AppCompatActivity {
         String substring1 ="@hufs.ac.kr";
         String substring2 ="@khu.ac.kr";
         String substring3 ="@uos.ac.kr";
-        if(et_email.getText().toString().contains(substring1)|| et_email.getText().toString().contains(substring2)|| et_email.getText().toString().contains(substring3)){
-
-        }else{
-            Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다. 단, 인증번호를 무시하고 비밀번호를 등록하세요", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
+        if(et_email.getText().toString().contains(substring1)&& et_email.getText().toString().contains(substring2)&& et_email.getText().toString().contains(substring3)){
+            Snackbar.make(iv_profile,"인증번호를 무시하고 비밀번호를 등록하세요", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                }
+            }).show();
+        }else{
+            Snackbar.make(iv_profile,"인증번호를 무시하고 비밀번호를 등록하세요", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                 }
             }).show();
         }
@@ -125,7 +129,6 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void click_ok(View view) {
-
         if(et_nickname.getText().toString().length() <3){
             Toast.makeText(this, "닉네임은 3문자 이상 입력해주세요", Toast.LENGTH_LONG).show();
             return;
@@ -133,8 +136,8 @@ public class SignupActivity extends AppCompatActivity {
         String substring1 ="@hufs.ac.kr";
         String substring2 ="@khu.ac.kr";
         String substring3 ="@uos.ac.kr";
-        if(!et_email.getText().toString().contains(substring1)|| !et_email.getText().toString().contains(substring2)|| !et_email.getText().toString().contains(substring3)){
-            Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다. 단, 인증번호를 무시하고 비밀번호를 등록하세요", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
+        if(!et_email.getText().toString().contains(substring1) && !et_email.getText().toString().contains(substring2) && !et_email.getText().toString().contains(substring3)){
+            Snackbar.make(iv_profile,"@huf.ac.kr, @khu.ac.kr, @uos.ac.kr 만 사용하실 수 있습니다. ", BaseTransientBottomBar.LENGTH_INDEFINITE).setAction("ok", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                 }
@@ -145,65 +148,64 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(this, "인증번호를 다시 확인해주세요", Toast.LENGTH_LONG).show();
             return;
         }
-
+        if(!signup()) {
+            return;
+        }
         else{
-            //todo: db에 프로필, 닉네임, 이메일 저장,,, auth에도 등록
-
-
-            signup();
-
-            //프로필사진을 firebase storage에저장
-            //현재시간
-            TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
-            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm", Locale.KOREAN);
-            dateFormat.setTimeZone(zone);
-            String uploadtime = dateFormat.format(new Date());
-            if(imgUri != null){
-                String fileName = uploadtime+"png";
-                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-                StorageReference imgRef = firebaseStorage.getReference("profile/"+fileName);
-
-                UploadTask uploadTask = imgRef.putFile(imgUri);
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                profileUrl = uri.toString();
-//                                Toast.makeText(SignupActivity.this, "프로필이미지 firestorage에 저장쓰", Toast.LENGTH_SHORT).show();
-
-                                //★★★프로필을 스토리지에 올렸으면, 그 url을 유저db에다가 보관
-                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                String userid = user.getUid();
-                                String userEmail = user.getEmail();
-                                UsersItem item = new UsersItem(profileUrl,et_nickname.getText().toString(),userid, userEmail,token); //프로필이미지, 닉네임, userid, 이메일
-                                firestore.collection("users").document(userid).set(item)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d("process","6666");
-                                                Toast.makeText(SignupActivity.this, "정보등록 성공", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d("process","7777");
-                                                Toast.makeText(SignupActivity.this, "정보등록 실패ㅠ", Toast.LENGTH_SHORT).show();
-                                                Log.w("TAG",e);
-                                            }
-                                        });
-
-                            }
-                        });
-                    }
-                });
-            }
+//            //todo: db에 프로필, 닉네임, 이메일 저장,,, auth에도 등록
+//
+//            //프로필사진을 firebase storage에저장
+//            //현재시간
+//            TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
+//            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm", Locale.KOREAN);
+//            dateFormat.setTimeZone(zone);
+//            String uploadtime = dateFormat.format(new Date());
+//            if(imgUri != null){
+//                String fileName = uploadtime+"png";
+//                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+//                StorageReference imgRef = firebaseStorage.getReference("profile/"+fileName);
+//
+//                UploadTask uploadTask = imgRef.putFile(imgUri);
+//                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                            @Override
+//                            public void onSuccess(Uri uri) {
+//                                profileUrl = uri.toString();
+////                                Toast.makeText(SignupActivity.this, "프로필이미지 firestorage에 저장쓰", Toast.LENGTH_SHORT).show();
+//
+//                                //★★★프로필을 스토리지에 올렸으면, 그 url을 유저db에다가 보관
+//                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+//                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                                String userid = user.getUid();
+//                                String userEmail = user.getEmail();
+//                                UsersItem item = new UsersItem(profileUrl,et_nickname.getText().toString(),userid, userEmail,token); //프로필이미지, 닉네임, userid, 이메일
+//                                firestore.collection("users").document(userid).set(item)
+//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                            @Override
+//                                            public void onSuccess(Void aVoid) {
+//                                                Log.d("process","6666");
+//                                                Toast.makeText(SignupActivity.this, "정보등록 성공", Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+//                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                                startActivity(intent);
+//                                            }
+//                                        })
+//                                        .addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                                Log.d("process","7777");
+//                                                Toast.makeText(SignupActivity.this, "정보등록 실패ㅠ", Toast.LENGTH_SHORT).show();
+//                                                Log.w("TAG",e);
+//                                            }
+//                                        });
+//
+//                            }
+//                        });
+//                    }
+//                });
+//            }
 
 
             Log.d("process","8888");
@@ -211,7 +213,8 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    private void signup() {
+
+    private boolean signup() {
 
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
@@ -227,27 +230,90 @@ public class SignupActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(SignupActivity.this, "회원가입성공", Toast.LENGTH_SHORT).show();
 
+                                    //쓰레드때문에 여기서 가입완료를 해야 함
+                                    //todo: db에 프로필, 닉네임, 이메일 저장,,, auth에도 등록
+
+                                    //프로필사진을 firebase storage에저장
+                                    //현재시간
+                                    TimeZone zone = TimeZone.getTimeZone("Asia/Seoul");  // TimeZone에 표준시 설정
+                                    DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm", Locale.KOREAN);
+                                    dateFormat.setTimeZone(zone);
+                                    String uploadtime = dateFormat.format(new Date());
+                                    if(imgUri != null){
+                                        String fileName = uploadtime+"png";
+                                        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                                        StorageReference imgRef = firebaseStorage.getReference("profile/"+fileName);
+
+                                        UploadTask uploadTask = imgRef.putFile(imgUri);
+                                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                    @Override
+                                                    public void onSuccess(Uri uri) {
+                                                        profileUrl = uri.toString();
+//                                Toast.makeText(SignupActivity.this, "프로필이미지 firestorage에 저장쓰", Toast.LENGTH_SHORT).show();
+
+                                                        //★★★프로필을 스토리지에 올렸으면, 그 url을 유저db에다가 보관
+                                                        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                        String userid = user.getUid();
+                                                        String userEmail = user.getEmail();
+                                                        UsersItem item = new UsersItem(profileUrl,et_nickname.getText().toString(),userid, userEmail,token); //프로필이미지, 닉네임, userid, 이메일
+                                                        firestore.collection("users").document(userid).set(item)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        Log.d("process","6666");
+                                                                        Toast.makeText(SignupActivity.this, "정보등록 성공", Toast.LENGTH_SHORT).show();
+                                                                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                        startActivity(intent);
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.d("process","7777");
+                                                                        Toast.makeText(SignupActivity.this, "정보등록 실패ㅠ", Toast.LENGTH_SHORT).show();
+                                                                        Log.w("TAG",e);
+                                                                    }
+                                                                });
+
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+
+
                                 }else{
                                     if(task.getException() != null)
 //                                        Toast.makeText(SignupActivity.this, ""+task.getException().toString(), Toast.LENGTH_SHORT).show();
-                                        Toast.makeText(SignupActivity.this, "오류발생 다시 시도해주세요", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SignupActivity.this, "비밀번호는 6자 이상으로 해주세요", Toast.LENGTH_SHORT).show();
+                                        checknum = false;
                                 }
                             }
                         });
             }else{
                 Toast.makeText(this, "비밀번호 일치안합니다!", Toast.LENGTH_SHORT).show();
+                return false;
             }
         }else{
             Toast.makeText(this, "이메일 또는 비번입력!", Toast.LENGTH_SHORT).show();
         }
 
-        //마무리했으면 그 정보를 sharedPreference에 저장
+
+
+    //마무리했으면 그 정보를 sharedPreference에 저장
         SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
         editor.putString("email", email);
         editor.putString("password",password);
         editor.commit();
+
+        return true;
 
     }
 

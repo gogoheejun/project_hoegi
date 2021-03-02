@@ -5,8 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -20,17 +19,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DaeDan"
         android:usesCleartextTraffic="true">
-        <service android:name=".PushService" android:exported="false">
+        <activity android:name=".FavActivity"></activity>
+
+        <service
+            android:name=".PushService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".WatchViewActivity"></activity>
+        <activity android:name=".WatchViewActivity" />
         <activity android:name=".Tab1_Map_WriteActivity" />
         <activity android:name=".ProfileUpdateActivity" />
-        <activity android:name=".ChatActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".SignupActivity" />
         <activity
             android:name=".LoginActivity"

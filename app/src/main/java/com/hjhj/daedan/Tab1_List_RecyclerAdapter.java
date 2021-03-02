@@ -73,9 +73,9 @@ public class Tab1_List_RecyclerAdapter extends RecyclerView.Adapter {
             super(itemView);
             Log.d("markeritem", "444");
 
-            this.ivCategory = itemView.findViewById(R.id.tab1_recycler_item_iv);
-            this.tvNameSchool =  itemView.findViewById(R.id.tab1_recycler_item_nameschool);
-            this.tvMsg = itemView.findViewById(R.id.tab1_recycler_item_msg);
+            this.ivCategory = itemView.findViewById(R.id.fav_item_iv);
+            this.tvNameSchool =  itemView.findViewById(R.id.fav_item_nameschool);
+            this.tvMsg = itemView.findViewById(R.id.fav_item_msg);
             this.tvLefttime = itemView.findViewById(R.id.tab1_recycler_item_lefttime);
 
             itemView.setOnClickListener(new View.OnClickListener() {
