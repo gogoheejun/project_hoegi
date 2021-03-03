@@ -10,6 +10,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="15dp"
         android:layout_alignParentRight="true"/>
     <TextView
         android:id="@+id/Messagebox_tv_name"
@@ -36,9 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="11:50"
-        android:textSize="12sp"
-        android:layout_toLeftOf="@id/Messagebox_tv_msg"
-        android:layout_alignBottom="@id/Messagebox_tv_msg"
+        android:textSize="10sp"
+        android:layout_below="@id/Messagebox_tv_msg"
+        android:layout_alignRight="@id/Messagebox_tv_msg"
         android:layout_marginRight="8dp"/>
 
 </RelativeLayout>

@@ -778,10 +778,10 @@ public class Tab1_MapFragment extends Fragment implements
                         public void run() {
                             try {
                                 if (temperature == null) temperature = "-";
-                                tv_temperature.setText(temperature + "도");
+                                tv_temperature.setText("현재온도: "+temperature + "도");
                             } catch (Exception e) {
                                 temperature = "-";
-                                tv_temperature.setText(temperature + "도");
+                                tv_temperature.setText("현재온도: "+temperature + "도");
                             }
 
 //                            Log.d("TEMP",temperature);

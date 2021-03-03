@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -24,6 +26,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -56,16 +62,36 @@ public class Tab3Fragment extends Fragment {
         view.findViewById(R.id.tab3_gotoMyText).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),WatchViewActivity.class);
-                intent.putExtra("markerUserid", GUser.userId);
-                startActivity(intent);
+                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                ArrayList<String> ids= new ArrayList<>();
+                firestore.collection("markers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            List<DocumentSnapshot> snapshots = task.getResult().getDocuments();
+                            for(DocumentSnapshot document : snapshots){
+                                MarkersItem item = document.toObject(MarkersItem.class);
+                                ids.add(item.userid);
+                            }
+                            if(ids.contains(GUser.userId)){
+                                Intent intent = new Intent(getActivity(), WatchViewActivity.class);
+                                intent.putExtra("markerUserid",GUser.userId);
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(getActivity(), "게시한 글이 없어요", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
             }
         });
 
         view.findViewById(R.id.tab3_gotoProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ProfileUpdateActivity.class));
+//                startActivity(new Intent(getActivity(), ProfileUpdateActivity.class));
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("이 페이지는 현재 보수중입니다").show();
             }
         });
 
@@ -89,7 +115,11 @@ public class Tab3Fragment extends Fragment {
                             mAuth.signOut();
                             getActivity().finish();
                         }
-                    });
+                    }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).show();
             }
         });
 

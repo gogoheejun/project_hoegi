@@ -29,6 +29,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:text="홍길동"
+            android:textStyle="bold"
             android:textSize="20sp"
             android:layout_toRightOf="@id/tab3Fragment_iv"
             />
@@ -37,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="학교이름"
+            android:textStyle="bold"
             android:layout_toRightOf="@id/tab3Fragment_nickname"
             android:layout_alignTop="@+id/tab3Fragment_nickname"
             android:layout_marginLeft="4dp"
@@ -45,57 +47,124 @@
 
     </RelativeLayout>
 
-
-    <TextView
+    <RelativeLayout
         android:id="@+id/tab3_gotoMyText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:gravity="center|left"
-        android:text="내가 쓴 글"
-        android:textStyle="bold"
-        android:textSize="20dp"
         android:layout_weight="1"
+        android:paddingLeft="40dp"
+        android:gravity="center"
         android:background="@drawable/bg_transparent_box_selector"
-        android:clickable="true"/>
-    <TextView
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_paperwrite" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|left"
+            android:text="내가 쓴 글"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/iv1"
+            />
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:id="@+id/tab3_gotoFavorite"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:gravity="center|left"
-        android:text="관심목록"
-        android:textStyle="bold"
-        android:textSize="20dp"
         android:layout_weight="1"
+        android:gravity="center"
+        android:paddingLeft="40dp"
         android:background="@drawable/bg_transparent_box_selector"
-        android:clickable="true"/>
-    <TextView
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_heart" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|left"
+            android:text="관심목록"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/iv2"
+            />
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:id="@+id/tab3_gotoProfile"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:gravity="center|left"
-        android:text="프로필수정"
-        android:textStyle="bold"
-        android:textSize="20dp"
         android:layout_weight="1"
+        android:gravity="center"
+        android:paddingLeft="40dp"
         android:background="@drawable/bg_transparent_box_selector"
-        android:clickable="true" />
+        android:clickable="true">
 
+        <ImageView
+            android:id="@+id/iv3"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_profile" />
 
-    <TextView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|left"
+            android:text="프로필수정"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/iv3"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/tab3_logout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:gravity="center|left"
-        android:text="로그아웃"
-        android:textStyle="bold"
-        android:textSize="20dp"
         android:layout_weight="1"
+        android:gravity="center"
+        android:paddingLeft="40dp"
         android:background="@drawable/bg_transparent_box_selector"
-        android:clickable="true"/>
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/iv4"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_logout" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|left"
+            android:text="로그아웃"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/iv4"
+            />
+    </RelativeLayout>
+
 
     <FrameLayout
         android:layout_width="wrap_content"
