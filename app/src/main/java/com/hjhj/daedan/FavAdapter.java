@@ -49,6 +49,8 @@ public class FavAdapter extends RecyclerView.Adapter {
         MarkersItem item = items.get(position);
         vh.tvNameSchool.setText(item.nickname+"("+item.school+")"); //"("+item.school+")"
         vh.tvMsg.setText(item.title);
+//        Log.d("favAdapter", "onBindViewHolder test"+item.nickname);
+
 
 
         if (item.category.equals("동아리 모집")) Glide.with(context).load(R.drawable.icon_club_2).into(vh.ivCategory);

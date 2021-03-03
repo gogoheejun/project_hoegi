@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,22 +37,26 @@ public class FavActivity extends AppCompatActivity {
             public void onRefresh() {
                 markersitems.clear();
                 loadData();
+                adapter.notifyDataSetChanged();
                 refreshLayout.setRefreshing(false);
+                if(markersitems.size()==0) findViewById(R.id.fav_noMessage).setVisibility(View.VISIBLE);
             }
         });
 
         recyclerView= findViewById(R.id.fav_recycler);
-//        adapter= new favAdapter(this, items);
-//        recyclerView.setAdapter(adapter);
         adapter = new FavAdapter(FavActivity.this, markersitems);
+        markersitems.add(new MarkersItem());
+
+//        recyclerView.setAdapter(adapter);  //원래 여기에 하고, markersitems.add(markersItem)이거 할때마다 notify해주는게 맞음....근데 why..?
 
     }
-//String favID;
+
     @Override
     protected void onResume() {
         super.onResume();
 
         loadData();
+
     }
 
     ArrayList<FavItem> list;
@@ -71,7 +76,7 @@ public class FavActivity extends AppCompatActivity {
 
                 markersitems.clear();
                 list = response.body();
-                Log.d("fav","loadData()"+list.get(0).favID);
+//                Log.d("fav","loadData()"+list.get(0).favID);
                 loadData2();
 
 //                list = response.body();
@@ -99,7 +104,7 @@ public class FavActivity extends AppCompatActivity {
         for (FavItem listitem : list) {
             a++;
             String favID = listitem.favID;
-            Log.d("fav", "loadDATA2()" + favID);
+            Log.d("fav", "loadDATA2()//a=" +a+"//"+ favID);
 
             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
             firestore.collection("markers").document(favID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -120,12 +125,17 @@ public class FavActivity extends AppCompatActivity {
                         markersItem.lat = documentSnapshot.getString("lat");
                         markersItem.lon = documentSnapshot.getString("lon");
                         markersitems.add(markersItem);
+                        //
+                        adapter.notifyItemInserted(markersitems.size()-1);
 //                        Log.d("fav", "loadDATA2()22" + markersitems.size()+"  "+ markersitems.get(b).nickname);
                         b++;
+                        Log.d("fav", " onComplete///b="+b );
+                        Log.d("fav", " "+markersItem.nickname );
                         if (a == b) {
-//                            adapter = new FavAdapter(FavActivity.this, items);
+//                            Log.d("fav", "a=b"+a+b +"........."+ markersitems.get(0).category);
+//                            Log.d("fav", "a=b"+a+b +"........."+ markersitems.get(1).category);
                             recyclerView.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
+                            if(markersitems.size()>0) findViewById(R.id.fav_noMessage).setVisibility(View.INVISIBLE);
                         }
                     }
                 }

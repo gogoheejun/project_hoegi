@@ -50,7 +50,7 @@ public class Tab3Fragment extends Fragment {
         tv_school = view.findViewById(R.id.tab3Fragment_school);
 
         tv_name.setText(GUser.nickname);
-        tv_school.setText(GUser.school);
+        tv_school.setText("("+GUser.school+")");
         Glide.with(this).load(GUser.profileUrl).into(cv);
 
         view.findViewById(R.id.tab3_gotoMyText).setOnClickListener(new View.OnClickListener() {
