@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".WatchViewActivity">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/WatchView_tv_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="아이디+학교"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/WatchView_toggle_fav"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/icon_selector_fav"
+                    android:textOn=" "
+                    android:textOff=" "/>
+                <TextView
+                    android:id="@+id/WatchView_tv_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="[카테고리명]"
+                    android:layout_toLeftOf="@id/WatchView_toggle_fav"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="12dp"/>
+                <TextView
+                    android:id="@+id/WatchView_tv_uploadedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="2월09일 16:16"
+                    android:layout_alignRight="@id/WatchView_tv_category"
+                    android:layout_below="@id/WatchView_tv_category"
+                    />
+<!--                <TextView-->
+<!--                    android:id="@+id/WatchView_tv_timeLength"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:paddingLeft="4dp"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:text="+3일 후 삭제"-->
+<!--                    android:layout_below="@id/WatchView_tv_category"-->
+<!--                    android:layout_alignRight="@id/WatchView_tv_category"/>-->
+
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green3"/>
+            <ImageView
+                android:id="@+id/WatchView_iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green3"/>
+            <TextView
+                android:id="@+id/WatchView_tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:padding="8dp"
+                android:text="제목칸입니다.스터디모집합니다"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green3"/>
+            <TextView
+                android:id="@+id/WatchView_tv_msg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:padding="8dp"
+                android:text="내용칸입니다. 샬라샬라 가나다라마바사\nㅇ라ㅇㄴㄹ\nㄴㄹㅇㄴㄹㅈ디  ㅇㄹ\ngfdfgf\ndfgfd\nfgfdg
+                                \n dsfsdfdsfgf\nsdfds\nsdfdsfsd"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="닫기"
+            android:onClick="click_back"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="쪽지 보내기"
+            android:onClick="click_sendMsg"/>
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
+

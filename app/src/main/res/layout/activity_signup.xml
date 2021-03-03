@@ -21,8 +21,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/signupactivity_iv_profile"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/signupactivity_iv_profile1"
             android:layout_marginBottom="20dp"
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:hint="인증번호 보내기"
+            android:text="인증번호 보내기"
             android:onClick="click_sendtoEmail"/>
         <EditText
             android:id="@+id/signupactivity_et_checknumber"
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:hint="인증번호 확인"
+            android:text="인증번호 확인"
             android:onClick="click_check"/>
 
         <EditText
@@ -102,7 +102,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="완료"
-            android:textColor="#FF333333"
             android:layout_margin="4dp"
             android:onClick="click_ok"/>
         <!--앞 스키마 android 안되면 app으로 하삼,,백그라운드 같이 줄 때는 Tint를 @null줘야해-->

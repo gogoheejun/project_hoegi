@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +25,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fragments[0] = new Tab1Fragment();
+
+        //
+        Intent intent = getIntent();
+        String newBlueLat = intent.getStringExtra("newBlueLat");
+        String newBlueLon = intent.getStringExtra("newBlueLon");
+        String name = intent.getStringExtra("name");
+
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction tran = fragmentManager.beginTransaction();
-        tran.add(R.id.MainActivity_container,fragments[0]);
+
+        if(name !=null){
+            fragments[1] = new Tab2Fragment();
+            tran.add(R.id.MainActivity_container, fragments[1]);
+        }else {
+            fragments[0] = new Tab1Fragment();
+            tran.add(R.id.MainActivity_container,fragments[0]);
+        }
 
         tran.commit();
 
@@ -42,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId()){
                     case R.id.menu_bnv_tab1:
+                        if(fragments[0]==null){
+                            fragments[0] = new Tab1Fragment();
+                            tran.add(R.id.MainActivity_container, fragments[0]);
+                        }
                         tran.show(fragments[0]);
                         break;
                     case R.id.menu_bnv_tab2:
@@ -57,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
                             tran.add(R.id.MainActivity_container, fragments[2]);
                         }
                         tran.show(fragments[2]);
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this );
+//                        builder.setTitle("notice").setMessage("페이지 현재 보수중입니다.").show();
                         break;
                 }
                 tran.commit();

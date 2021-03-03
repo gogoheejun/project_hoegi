@@ -1,10 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mappage_mapview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+
+
+
+   <RelativeLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true">
+
+       <ImageView
+           android:id="@+id/page_map_iv_weather"
+           android:layout_width="24dp"
+           android:layout_height="24dp"
+           android:layout_marginTop="8dp"
+           android:src="@drawable/icon_thermometer" />
+       <TextView
+           android:id="@+id/page_map_tv_temperature"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="현재 온도: 20도 "
+           android:layout_marginTop="10dp"
+           android:layout_toRightOf="@id/page_map_iv_weather"/>
+       <ImageView
+           android:id="@+id/page_map_iv_reload"
+           android:layout_width="36dp"
+           android:layout_height="36dp"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           android:layout_marginTop="2dp"
+           android:src="@drawable/icon_reload"/>
+       <ImageView
+           android:layout_width="36dp"
+           android:layout_height="36dp"
+           android:background="#8FFFFFFF"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           android:layout_marginTop="2dp"
+          />
+
+<!--       <TextView-->
+<!--           android:id="@+id/page_map_tv_dust"-->
+<!--           android:layout_width="wrap_content"-->
+<!--           android:layout_height="wrap_content"-->
+<!--           android:text="미세먼지: 20"-->
+<!--           android:layout_toRightOf="@id/page_map_tv_temperature"-->
+<!--           android:layout_alignTop="@id/page_map_tv_temperature"-->
+<!--           android:layout_marginLeft="10dp"/>-->
+
+
+   </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="4dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/tab1MapPage_filter"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_filter"
+            android:layout_marginBottom="4dp"
+            android:clickable="true"/>
+
+        <ImageView
+            android:id="@+id/tab1MapPage_write"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/icon_write"
+            android:layout_marginBottom="4dp"
+            android:clickable="true"/>
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/tab1MapPage_fab"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:fabSize="mini"-->
+<!--            android:src="@drawable/icon_write"-->
+<!--            app:backgroundTint="@android:color/transparent"-->
+<!--            app:elevation="1dp"-->
+<!--            style="@style/Widget.App.FloatingActionButton"-->
+<!--            />-->
+
+    </LinearLayout>
+
 </RelativeLayout>

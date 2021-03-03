@@ -1,14 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ProfileUpdateActivity">
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="프로필업데이트"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context=".SignupActivity">
 
-</RelativeLayout>
+        <!--weight계산은 height에 적힌 거 먼저계산!!하고, 나머지에서 weight비율로 먹음(웨이트 안적히면 0인거임)-->
+        <FrameLayout
+            android:id="@+id/signupactivity_framelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/signupactivity_iv_profile"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/signupactivity_iv_profile1"
+            android:layout_marginBottom="20dp"
+            android:onClick="click_profile"/>
+
+        <EditText
+            android:id="@+id/signupactivity_et_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/loginactivity_et_box"
+            android:hint="닉네임"
+            android:inputType="text"
+            android:maxLength="15"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/signupactivity_et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="이메일"
+            android:inputType="textWebEmailAddress"
+            android:background="@drawable/loginactivity_et_box"
+            android:padding="8dp"
+            android:layout_margin="4dp"/>
+
+        <!--        <androidx.appcompat.widget.AppCompatSpinner-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="인증번호 보내기"
+            android:onClick="click_sendtoEmail"/>
+        <EditText
+            android:id="@+id/signupactivity_et_checknumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="인증번호"
+            android:inputType="number"
+            android:background="@drawable/loginactivity_et_box"
+            android:padding="8dp"
+            android:layout_margin="4dp"
+            android:gravity="top"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="인증번호 확인"
+            android:onClick="click_check"/>
+
+        <EditText
+            android:id="@+id/signupactivity_et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="비밀번호"
+            android:maxLength="20"
+            android:background="@drawable/loginactivity_et_box"
+            android:padding="8dp"
+            android:layout_margin="4dp" />
+        <EditText
+            android:id="@+id/signupactivity_et_password2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="비밀번호 확인"
+            android:maxLength="20"
+            android:background="@drawable/loginactivity_et_box"
+            android:padding="8dp"
+            android:layout_margin="4dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="완료"
+            android:layout_margin="4dp"
+            android:onClick="click_ok"/>
+        <!--앞 스키마 android 안되면 app으로 하삼,,백그라운드 같이 줄 때는 Tint를 @null줘야해-->
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
