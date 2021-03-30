@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
@@ -56,9 +57,14 @@ public class Tab3Fragment extends Fragment {
         view.findViewById(R.id.tab3_gotoMyText).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),WatchViewActivity.class);
-                intent.putExtra("markerUserid", GUser.userId);
-                startActivity(intent);
+                try{
+                    Intent intent = new Intent(getActivity(),WatchViewActivity.class);
+                    intent.putExtra("markerUserid", GUser.userId);
+                    startActivity(intent);
+                }catch (Throwable throwable){
+                    Toast.makeText(getContext(), "쓴 글이 없어요!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

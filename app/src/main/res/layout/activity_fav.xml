@@ -11,11 +11,11 @@
         android:layout_height="match_parent"
         android:id="@+id/layout_refresh">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="좋아요 목록이 없습니다.\n 상대게시글의 하트모양을 눌러보세요"
-            android:gravity="center"/>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="좋아요 목록이 없습니다.\n 상대게시글의 하트모양을 눌러보세요"-->
+<!--            android:gravity="center"/>-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fav_recycler"

@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
                             tran.add(R.id.MainActivity_container, fragments[2]);
                         }
                         tran.show(fragments[2]);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this );
-                        builder.setTitle("notice").setMessage("페이지 현재 보수중입니다.").show();
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this );
+//                        builder.setTitle("notice").setMessage("페이지 현재 보수중입니다.").show();
                         break;
                 }
                 tran.commit();

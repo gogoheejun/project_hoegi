@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //sharedPreference에서 로그인아이디 가져오기
-        onLoginAgain();
+//        onLoginAgain();
     }
 
     private void onLoginAgain() {

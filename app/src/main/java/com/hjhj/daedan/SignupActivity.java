@@ -266,7 +266,7 @@ public class SignupActivity extends AppCompatActivity {
                                                                     public void onSuccess(Void aVoid) {
                                                                         Log.d("process","6666");
                                                                         Toast.makeText(SignupActivity.this, "정보등록 성공", Toast.LENGTH_SHORT).show();
-                                                                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                                                        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                                         startActivity(intent);
                                                                     }

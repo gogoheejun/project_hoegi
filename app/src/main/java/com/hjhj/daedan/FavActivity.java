@@ -71,7 +71,7 @@ public class FavActivity extends AppCompatActivity {
 
                 markersitems.clear();
                 list = response.body();
-                Log.d("fav","loadData()"+list.get(0).favID);
+//                Log.d("fav","loadData()"+list.get(0).favID);
                 loadData2();
 
 //                list = response.body();
