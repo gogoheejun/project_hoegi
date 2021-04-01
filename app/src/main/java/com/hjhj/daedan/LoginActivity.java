@@ -105,13 +105,20 @@ public class LoginActivity extends AppCompatActivity {
 
                                         //user정보를 GUser에 담기
                                         intoGUser(user.getUid());
-
-
                                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                                        
+
+                                        //sharedpreference에 넣기
+                                        SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = pref.edit();
+                                        editor.putString("email", email);
+                                        editor.putString("password",password);
+                                        editor.commit();
+
+
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
+                                        finish();
                                     }else{
                                         if(task.getException() != null){
                                             Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
@@ -161,15 +168,19 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
-
+                                finish();
 
                             }else{
                                 if(task.getException() != null){
-                                    Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "로그인 정보가 없어요", Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
                             }
                         }
                     });
+        }else{
+            Toast.makeText(this, "hi~", Toast.LENGTH_SHORT).show();
+            return;
         }
 
     }
