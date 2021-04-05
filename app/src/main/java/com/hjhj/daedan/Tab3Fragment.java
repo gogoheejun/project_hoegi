@@ -3,6 +3,7 @@ package com.hjhj.daedan;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Tab3Fragment extends Fragment {
     CircleImageView cv;
@@ -113,6 +116,15 @@ public class Tab3Fragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mAuth.signOut();
+                            //로그아웃했으니 sharedpreference에 저장된 정보지움
+                            SharedPreferences pref = getActivity().getSharedPreferences("account", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("email", null);
+                            editor.putString("password",null);
+                            editor.commit();
+
+                            //다시 로그인화면으로 이동
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
                             getActivity().finish();
                         }
                     }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
