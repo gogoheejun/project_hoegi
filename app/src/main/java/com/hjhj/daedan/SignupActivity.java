@@ -216,6 +216,11 @@ public class SignupActivity extends AppCompatActivity {
 
     private boolean signup() {
 
+        if(imgUri == null){
+            Toast.makeText(this, "프로필버튼을 눌러서 사진을 등록해주세요", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
         String password2 = et_password2.getText().toString();
@@ -228,7 +233,7 @@ public class SignupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(SignupActivity.this, "회원가입성공", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SignupActivity.this, "회원가입성공!\n 곧 화면이 전환됩니다. 기다려주세요", Toast.LENGTH_LONG).show();
 
                                     //쓰레드때문에 여기서 가입완료를 해야 함
                                     //todo: db에 프로필, 닉네임, 이메일 저장,,, auth에도 등록
