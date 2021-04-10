@@ -3,8 +3,11 @@ package com.hjhj.daedan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +28,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import static androidx.core.content.ContextCompat.checkSelfPermission;
+
 public class LoginActivity extends AppCompatActivity {
     EditText et_email;
     EditText et_pw;
@@ -44,6 +49,14 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.activitylogin_btn_login);
     
         mAuth = FirebaseAuth.getInstance();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                requestPermissions(permissions, 0);
+            }
+        }
 
 
 
