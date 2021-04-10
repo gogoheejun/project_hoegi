@@ -115,7 +115,6 @@ public class Tab1_MapFragment extends Fragment implements
                 requestPermissions(permissions, 0);
             }
         }
-
     }
 
 
@@ -135,10 +134,7 @@ public class Tab1_MapFragment extends Fragment implements
         Intent intent = getActivity().getIntent();
         newBlueLat = intent.getStringExtra("newBlueLat");
         newBlueLon = intent.getStringExtra("newBlueLon");
-//        if(getArguments() !=null){
-//            newBlueLat = getArguments().getString("newBlueLat");
-//            newBlueLon = getArguments().getString("newBlueLon");
-//        }
+
 
         Log.d("toMap","Mapfrag 111 :"+newBlueLat);
 
@@ -714,6 +710,7 @@ public class Tab1_MapFragment extends Fragment implements
 //        if(x<1) x=55;
 //        if(y<1) y=127;
         server = url1 + api + url2 + date + "&base_time=" + time + "&nx=" + intX + "&ny=" + intY;
+        Log.i("weather",server);
 
         new Thread() {
             @Override

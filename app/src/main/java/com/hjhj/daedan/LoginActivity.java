@@ -66,13 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-//    ..push..
-//        Intent intent = getIntent();
-//        String name = intent.getStringExtra("name");
-//        String message = intent.getStringExtra("msg");
-
-//        Toast.makeText(this, name+": "+message, Toast.LENGTH_SHORT).show();
-
 
 //--------------------------------
         et_pw.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -92,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                String  email = et_email.getText().toString();
-                String password = et_pw.getText().toString();
+                String  email = et_email.getText().toString().trim();
+                String password = et_pw.getText().toString().trim();
                 
                 if(email.length()>0 && password.length()>0){
                     mAuth.signInWithEmailAndPassword(email, password)
