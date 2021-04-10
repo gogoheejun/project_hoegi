@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +34,7 @@ public class Tab2Fragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
 
     FirebaseFirestore firestore;
+    TextView noMessage;
 
     String roomname;
     String friendID, friendName;
@@ -123,6 +125,8 @@ public class Tab2Fragment extends Fragment {
                                         adapter.notifyDataSetChanged();
                                         j++;
 
+                                        if(messageItems.size()>0) noMessage.setVisibility(View.INVISIBLE);
+                                        else noMessage.setVisibility(View.VISIBLE);
                                     }
                                 }
                             });
@@ -175,6 +179,10 @@ public class Tab2Fragment extends Fragment {
         adapter = new Tab2_Chatlist_RecyclerAdapter(getActivity(),messageItems);
         Log.w("order","555");
         recyclerView.setAdapter(adapter);
+
+        noMessage = view.findViewById(R.id.chat_noMessage);
+
+
         Log.w("order","666");
         refreshLayout= view.findViewById(R.id.layout_refresh);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
