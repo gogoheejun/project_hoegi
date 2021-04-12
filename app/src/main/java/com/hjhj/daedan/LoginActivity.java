@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Log.e("로그인디버깅","LoginActivity onCreate");
 
         et_email = findViewById(R.id.activitylogin_et_email);
         et_pw = findViewById(R.id.activitylogin_et_pw);
@@ -120,11 +122,11 @@ public class LoginActivity extends AppCompatActivity {
                                         editor.putString("password",password);
                                         editor.commit();
 
-
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(intent);
-                                        finish();
+//
+//                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                        startActivity(intent);
+//                                        finish();
                                     }else{
                                         if(task.getException() != null){
                                             Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
@@ -138,16 +140,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
         //sharedPreference에서 로그인아이디 가져오기
+        //todo 지금 얘가 문제야. 얘 삭제하면 잘돼. 그러나 자동로그인이 안돼..
         onLoginAgain();
     }
 
     private void onLoginAgain() {
+        Log.e("로그인디버깅","LoginActivity onLoginAgain()");
+
         SharedPreferences pref = getSharedPreferences("account",MODE_PRIVATE);
         String email = pref.getString("email",null);
         String password = pref.getString("password",null);
-        Log.d("shared", "onLoginAgain: "+email+password);
+        Log.e("로그인디버깅", "LoginActibity onLoginAgain() "+email+password);
         if(email!= null && password != null){
             //if정보갖고온게 있다면,
             mAuth.signInWithEmailAndPassword(email, password)
@@ -155,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
+
                                 FirebaseUser user = mAuth.getCurrentUser();
 
                                 //user정보를 GUser에 담기
@@ -164,17 +169,17 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
 
                                 //푸시받으면 바로 채팅리스트로 보내기
-                                Intent intent = getIntent();
-                                String name = intent.getStringExtra("name");
-                                String message = intent.getStringExtra("msg");
-
-                                intent = new Intent(LoginActivity.this, MainActivity.class);
-                                if(name!=null){
-                                    intent.putExtra("name",name);
-                                }
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                finish();
+//                                Intent intent = getIntent();
+//                                String name = intent.getStringExtra("name");
+//                                String message = intent.getStringExtra("msg");
+//
+//                                intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                if(name!=null){
+//                                    intent.putExtra("name",name);
+//                                }
+//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                startActivity(intent);
+//                                finish();
 
                             }else{
                                 if(task.getException() != null){
@@ -192,6 +197,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void intoGUser(String userId){
+        Log.e("로그인디버깅","LoginActivity intoGUser()");
+
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -200,9 +207,13 @@ public class LoginActivity extends AppCompatActivity {
                     DocumentSnapshot documentSnapshot = task.getResult();
                    GUser.nickname = documentSnapshot.getString("nickname");
                    GUser.userId = documentSnapshot.getString("userid");
-                   String email = documentSnapshot.getString("email");
-                   String domain = email.substring(email.indexOf("@")+1);
-                   switch (domain){
+                    Log.e("로그인디버깅","LoginActivity intoGUser()1"+GUser.nickname);
+                    String email = documentSnapshot.getString("email");
+                    Log.e("로그인디버깅","LoginActivity intoGUser()2"+email);
+                    String domain = email.substring(email.indexOf("@")+1);
+                    Log.e("로그인디버깅","LoginActivity intoGUser()3"+domain);
+
+                    switch (domain){
                        case "hufs.ac.kr":
                            GUser.school = "한국외국어대학교";
                            break;
@@ -214,6 +225,25 @@ public class LoginActivity extends AppCompatActivity {
                            break;
                    }
                    GUser.profileUrl = documentSnapshot.getString("profile");
+
+//                    Toast.makeText(LoginActivity.this, "학교:", Toast.LENGTH_SHORT).show();
+                    //다 완료되면 이동..푸시메시지도 함께.
+//                    Intent intent = getIntent();
+//                    if(intent.getStringExtra("name")!=null){
+//                        String name = intent.getStringExtra("name");
+//                        intent = new Intent(LoginActivity.this, MainActivity.class);
+//                        intent.putExtra("name",name);
+//                    }
+//                    else{
+//                        intent = new Intent(LoginActivity.this, MainActivity.class);
+//                    }
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    Log.e("로그인디버깅","LoginActivity intent보냄");
+                    finish();
+
+
                 }
             }
         });
@@ -225,5 +255,22 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(LoginActivity.this, SignupActivity.class));
     }
 
+    @Override
+    protected void onPause() {
+        Log.e("로그인디버깅","LoginActivity onPause()");
+        super.onPause();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("로그인디버깅","LoginActivity onStop()");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e("로그인디버깅","LoginActivity onDestroy()");
+        super.onDestroy();
+    }
 }

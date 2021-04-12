@@ -109,13 +109,7 @@ public class Tab1_MapFragment extends Fragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //로그인화면에서 미리 퍼미션 받았음
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-//                String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//                requestPermissions(permissions, 0);
-//            }
-//        }
+        Log.e("로그인","Tab1_MapFragment onCreate()");
     }
 
 
@@ -123,6 +117,7 @@ public class Tab1_MapFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.e("로그인","Tab1_MapFragment onCreateView()");
         Log.d("gotit","onCreatView start");
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -132,9 +127,11 @@ public class Tab1_MapFragment extends Fragment implements
         iv_weather = view.findViewById(R.id.page_map_iv_weather);
         iv_reload = view.findViewById(R.id.page_map_iv_reload);
 
-        Intent intent = getActivity().getIntent();
-        newBlueLat = intent.getStringExtra("newBlueLat");
-        newBlueLon = intent.getStringExtra("newBlueLon");
+        if(getActivity().getIntent()!=null){
+            Intent intent = getActivity().getIntent();
+            newBlueLat = intent.getStringExtra("newBlueLat");
+            newBlueLon = intent.getStringExtra("newBlueLon");
+        }
 
 
         Log.d("toMap","Mapfrag 111 :"+newBlueLat);
@@ -164,9 +161,9 @@ public class Tab1_MapFragment extends Fragment implements
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
+//                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
                 if (locationManager.isProviderEnabled("gps")) {
                     location = locationManager.getLastKnownLocation("gps");
                 } else if (locationManager.isProviderEnabled("network")) {
