@@ -21,10 +21,13 @@ android {
 
     buildTypes {
         release {
-            //변경사항
-            minifyEnabled true
+            //변경사항--오류수정 전
+//            minifyEnabled true
+//
+//            shrinkResources true
+            //오류수정 후
+            minifyEnabled false
 
-            shrinkResources true
             //--------------------
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
