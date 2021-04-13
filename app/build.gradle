@@ -11,8 +11,8 @@ android {
         applicationId "com.hjhj.daedan"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.5"
+        versionCode 6
+        versionName "1.51"
 
         multiDexEnabled true
 
