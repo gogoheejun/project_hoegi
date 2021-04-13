@@ -165,21 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //user정보를 GUser에 담기
                                 intoGUser(user.getUid());
 
-
                                 Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-
-                                //푸시받으면 바로 채팅리스트로 보내기
-//                                Intent intent = getIntent();
-//                                String name = intent.getStringExtra("name");
-//                                String message = intent.getStringExtra("msg");
-//
-//                                intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                if(name!=null){
-//                                    intent.putExtra("name",name);
-//                                }
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                finish();
 
                             }else{
                                 if(task.getException() != null){
@@ -226,18 +212,6 @@ public class LoginActivity extends AppCompatActivity {
                    }
                    GUser.profileUrl = documentSnapshot.getString("profile");
 
-//                    Toast.makeText(LoginActivity.this, "학교:", Toast.LENGTH_SHORT).show();
-                    //다 완료되면 이동..푸시메시지도 함께.
-//                    Intent intent = getIntent();
-//                    if(intent.getStringExtra("name")!=null){
-//                        String name = intent.getStringExtra("name");
-//                        intent = new Intent(LoginActivity.this, MainActivity.class);
-//                        intent.putExtra("name",name);
-//                    }
-//                    else{
-//                        intent = new Intent(LoginActivity.this, MainActivity.class);
-//                    }
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     Log.e("로그인디버깅","LoginActivity intent보냄");
