@@ -11,7 +11,7 @@ https://user-images.githubusercontent.com/78577071/122661744-a497ac80-d1c8-11eb-
 https://user-images.githubusercontent.com/78577071/122661870-b62d8400-d1c9-11eb-8725-43596e925b13.mp4
 
 ## 지도 중심의 기온을 보여줍니다(기상청API)
-https://user-images.githubusercontent.com/78577071/122662036-d90c6800-d1ca-11eb-8dbf-779b877ae113.mp4
+https://user-images.githubusercontent.com/78577071/122662031-d4e04a80-d1ca-11eb-96ba-54cde4a92f19.mp4
 
 ## 필터검색을 합니다
 https://user-images.githubusercontent.com/78577071/122662036-d90c6800-d1ca-11eb-8dbf-779b877ae113.mp4
